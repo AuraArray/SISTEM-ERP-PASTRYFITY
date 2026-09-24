@@ -1,0 +1,240 @@
+{
+  "users": [
+    {
+      "pin": "8888",
+      "nama": "Owner System",
+      "role": "Super Admin",
+      "kontak": "owner@pastryfity.com",
+      "alamat": "-",
+      "detail_posisi": "CEO"
+    }
+  ],
+  "roles": [
+    {
+      "name": "Accounting",
+      "modules": [
+        "dashboard",
+        "pos",
+        "stok",
+        "akuntansi",
+        "laporan",
+        "invoice",
+        "karyawan",
+        "panduan"
+      ]
+    },
+    {
+      "name": "Admin Gudang",
+      "modules": [
+        "dashboard",
+        "stok",
+        "karyawan",
+        "panduan"
+      ]
+    },
+    {
+      "name": "Admin Toko",
+      "modules": [
+        "dashboard",
+        "pos",
+        "stok",
+        "laporan",
+        "crm",
+        "hrm_admin",
+        "karyawan",
+        "panduan"
+      ]
+    },
+    {
+      "name": "Head Dapur",
+      "modules": [
+        "pos",
+        "stok",
+        "dapur",
+        "karyawan",
+        "panduan"
+      ]
+    },
+    {
+      "name": "Karyawan",
+      "modules": [
+        "karyawan",
+        "panduan"
+      ]
+    },
+    {
+      "name": "Kasir",
+      "modules": [
+        "pos",
+        "crm",
+        "karyawan",
+        "panduan"
+      ]
+    },
+    {
+      "name": "Owner",
+      "modules": [
+        "dashboard",
+        "pos",
+        "dapur",
+        "stok",
+        "akuntansi",
+        "laporan",
+        "invoice",
+        "crm",
+        "hrm_admin",
+        "kpi",
+        "legal",
+        "master",
+        "karyawan",
+        "panduan"
+      ]
+    },
+    {
+      "name": "Super Admin",
+      "modules": [
+        "dashboard",
+        "pos",
+        "dapur",
+        "stok",
+        "akuntansi",
+        "laporan",
+        "invoice",
+        "crm",
+        "hrm_admin",
+        "kpi",
+        "legal",
+        "master",
+        "karyawan",
+        "panduan"
+      ]
+    }
+  ],
+  "produk": [],
+  "trx": [
+    {
+      "tgl": "2026-09-24",
+      "jam": "01:08",
+      "tglAmbil": "2026-09-24",
+      "jamAmbil": "01:08",
+      "cust": "r",
+      "hp": "rege",
+      "items": [
+        {
+          "id": "custom_1790273330129",
+          "nama": "[Custom] dfdvv",
+          "harga": 100000,
+          "modal": 0,
+          "qty": 1,
+          "max": 999,
+          "cdata": {
+            "n": "dfdvv",
+            "jns": "g",
+            "ukr": "fg",
+            "mdl": "g",
+            "cap": "ff",
+            "det": "ee"
+          }
+        }
+      ],
+      "sub": 100000,
+      "ppn": 0,
+      "net": 100000,
+      "dp": 100000,
+      "sisa": 0,
+      "stat": "Lunas",
+      "method": "Kasir Utama - Tunai Kasir",
+      "kirim": "Ambil Sendiri",
+      "kirimDet": "-",
+      "pack": "Plastik (Gratis)",
+      "type": "Normal",
+      "kasir": "Owner System",
+      "ts": 1790273339084,
+      "id": 1
+    }
+  ],
+  "jurnal": [
+    {
+      "tgl": "2026-09-24",
+      "jenis": "Pendapatan Operasional (+)",
+      "nom": 100000,
+      "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - r",
+      "id": 1
+    }
+  ],
+  "crm": [
+    {
+      "hp": "rege",
+      "nama": "r",
+      "total": 100000,
+      "poin": 10
+    }
+  ],
+  "hrm": [],
+  "pengajuan": [],
+  "laporan": [],
+  "logs": [
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790272597278,
+      "id": 1
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790273185174,
+      "id": 2
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790273303390,
+      "id": 3
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Transaksi POS",
+      "detail": "Order r - Rp 100.000",
+      "ts": 1790273339093,
+      "id": 4
+    }
+  ],
+  "stok_log": [],
+  "kpi": [],
+  "payment_acc": [
+    {
+      "jenis": "Tunai Kasir",
+      "no": "-",
+      "nama": "Kasir Utama",
+      "id": 1
+    },
+    {
+      "jenis": "QRIS",
+      "no": "-",
+      "nama": "QRIS PastryFity",
+      "id": 2
+    },
+    {
+      "jenis": "Transfer Bank",
+      "no": "BCA 123456",
+      "nama": "PT PastryFity",
+      "id": 3
+    },
+    {
+      "jenis": "Mesin EDC Debit",
+      "no": "EDC Kasir 1",
+      "nama": "BCA/Mandiri/BNI",
+      "id": 4
+    }
+  ],
+  "kurir": [],
+  "edit_req": []
+}
