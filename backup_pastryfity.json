@@ -153,15 +153,7 @@
       "id": 1
     }
   ],
-  "jurnal": [
-    {
-      "tgl": "2026-09-24",
-      "jenis": "Pendapatan Operasional (+)",
-      "nom": 100000,
-      "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - r",
-      "id": 1
-    }
-  ],
+  "jurnal": [],
   "crm": [
     {
       "hp": "rege",
