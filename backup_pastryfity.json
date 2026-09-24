@@ -111,48 +111,7 @@
     }
   ],
   "produk": [],
-  "trx": [
-    {
-      "tgl": "2026-09-24",
-      "jam": "01:08",
-      "tglAmbil": "2026-09-24",
-      "jamAmbil": "01:08",
-      "cust": "r",
-      "hp": "rege",
-      "items": [
-        {
-          "id": "custom_1790273330129",
-          "nama": "[Custom] dfdvv",
-          "harga": 100000,
-          "modal": 0,
-          "qty": 1,
-          "max": 999,
-          "cdata": {
-            "n": "dfdvv",
-            "jns": "g",
-            "ukr": "fg",
-            "mdl": "g",
-            "cap": "ff",
-            "det": "ee"
-          }
-        }
-      ],
-      "sub": 100000,
-      "ppn": 0,
-      "net": 100000,
-      "dp": 100000,
-      "sisa": 0,
-      "stat": "Lunas",
-      "method": "Kasir Utama - Tunai Kasir",
-      "kirim": "Ambil Sendiri",
-      "kirimDet": "-",
-      "pack": "Plastik (Gratis)",
-      "type": "Normal",
-      "kasir": "Owner System",
-      "ts": 1790273339084,
-      "id": 1
-    }
-  ],
+  "trx": [],
   "jurnal": [],
   "crm": [
     {
@@ -197,6 +156,14 @@
       "detail": "Order r - Rp 100.000",
       "ts": 1790273339093,
       "id": 4
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790276315590,
+      "id": 5
     }
   ],
   "stok_log": [],
