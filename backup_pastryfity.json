@@ -286,12 +286,6 @@
   "kpi": [],
   "payment_acc": [
     {
-      "jenis": "QRIS",
-      "no": "-",
-      "nama": "QRIS PastryFity",
-      "id": 2
-    },
-    {
       "jenis": "Transfer Bank",
       "no": "BCA 123456",
       "nama": "PT PastryFity",
