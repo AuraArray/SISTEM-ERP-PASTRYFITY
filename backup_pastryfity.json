@@ -123,13 +123,6 @@
     {
       "tgl": "2026-09-25",
       "jenis": "Pendapatan Operasional (+)",
-      "nom": 20000,
-      "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - Guest",
-      "id": 2
-    },
-    {
-      "tgl": "2026-09-25",
-      "jenis": "Pendapatan Operasional (+)",
       "nom": 1,
       "ket": "POS Lunas [] - 1",
       "id": 3
