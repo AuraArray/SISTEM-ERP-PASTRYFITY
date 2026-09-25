@@ -286,12 +286,6 @@
   "kpi": [],
   "payment_acc": [
     {
-      "jenis": "Tunai Kasir",
-      "no": "-",
-      "nama": "Kasir Utama",
-      "id": 1
-    },
-    {
       "jenis": "QRIS",
       "no": "-",
       "nama": "QRIS PastryFity",
