@@ -111,9 +111,64 @@
     }
   ],
   "produk": [],
-  "trx": [],
-  "jurnal": [],
+  "trx": [
+    {
+      "tgl": "2026-09-25",
+      "jam": "07:27",
+      "tglAmbil": "2026-09-25",
+      "jamAmbil": "07:27",
+      "cust": "D",
+      "hp": "A",
+      "items": [
+        {
+          "id": "custom_1790296054137",
+          "nama": "[Custom] Fffjdj",
+          "harga": 10000000,
+          "modal": 0,
+          "qty": 1,
+          "max": 999,
+          "cdata": {
+            "n": "Fffjdj",
+            "jns": "Xjxjxj",
+            "ukr": "Djxjx",
+            "mdl": "Xjxjx",
+            "cap": "Ffjdjd",
+            "det": "Dxjdj"
+          }
+        }
+      ],
+      "sub": 10000000,
+      "ppn": 0,
+      "net": 10000000,
+      "dp": 10000,
+      "sisa": 9990000,
+      "stat": "DP",
+      "method": "Kasir Utama - Tunai Kasir",
+      "kirim": "Ambil Sendiri",
+      "kirimDet": "-",
+      "pack": "Plastik (Gratis)",
+      "type": "Normal",
+      "kasir": "Owner System",
+      "ts": 1790296073262,
+      "id": 1
+    }
+  ],
+  "jurnal": [
+    {
+      "tgl": "2026-09-25",
+      "jenis": "Pendapatan Operasional (+)",
+      "nom": 10000,
+      "ket": "POS DP [Kasir Utama - Tunai Kasir] - D",
+      "id": 1
+    }
+  ],
   "crm": [
+    {
+      "hp": "A",
+      "nama": "D",
+      "total": 10000000,
+      "poin": 10
+    },
     {
       "hp": "rege",
       "nama": "r",
@@ -172,6 +227,22 @@
       "detail": "Masuk ke sistem",
       "ts": 1790295130114,
       "id": 7
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790296027303,
+      "id": 9
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Transaksi POS",
+      "detail": "Order D - Rp 10.000.000",
+      "ts": 1790296073278,
+      "id": 10
     }
   ],
   "stok_log": [],
