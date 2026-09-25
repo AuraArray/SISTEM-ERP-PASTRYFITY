@@ -15,6 +15,13 @@
       "pin": "490313"
     },
     {
+      "nama": "ICHA",
+      "role": "TIM DAPUR",
+      "kontak": "082165398844",
+      "detail_posisi": "Medan Johor",
+      "pin": "561134"
+    },
+    {
       "pin": "8888",
       "nama": "Owner System",
       "role": "Super Admin",
@@ -277,6 +284,14 @@
       "detail": "Menambah role TIM DAPUR",
       "ts": 1790300917068,
       "id": 15
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk ICHA",
+      "ts": 1790300981356,
+      "id": 16
     }
   ],
   "stok_log": [],
