@@ -305,6 +305,14 @@
       "detail": "Masuk ke sistem",
       "ts": 1790307258218,
       "id": 34
+    },
+    {
+      "user": "Nana",
+      "pin": "442335",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790307580834,
+      "id": 36
     }
   ],
   "stok_log": [],
