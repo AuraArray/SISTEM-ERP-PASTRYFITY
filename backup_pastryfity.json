@@ -321,14 +321,6 @@
       "detail": "Masuk ke sistem",
       "ts": 1790318961186,
       "id": 36
-    },
-    {
-      "user": "Owner System",
-      "pin": "8888",
-      "action": "Login",
-      "detail": "Masuk ke sistem",
-      "ts": 1790319224113,
-      "id": 39
     }
   ],
   "stok_log": [],
