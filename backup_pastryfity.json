@@ -297,6 +297,14 @@
       "detail": "Generate PIN untuk Nana",
       "ts": 1790301549116,
       "id": 32
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790307258218,
+      "id": 34
     }
   ],
   "stok_log": [],
