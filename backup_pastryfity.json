@@ -15,6 +15,13 @@
       "pin": "442335"
     },
     {
+      "nama": "NANA",
+      "role": "KASIR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "886574"
+    },
+    {
       "pin": "8888",
       "nama": "Owner System",
       "role": "Super Admin",
@@ -362,6 +369,14 @@
       "detail": "Generate PIN untuk DESVITA",
       "ts": 1790320486422,
       "id": 39
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk NANA",
+      "ts": 1790320540565,
+      "id": 40
     }
   ],
   "stok_log": [],
