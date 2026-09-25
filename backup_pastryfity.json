@@ -139,6 +139,14 @@
         "karyawan",
         "panduan"
       ]
+    },
+    {
+      "name": "TIM DAPUR",
+      "modules": [
+        "pos",
+        "dapur",
+        "stok"
+      ]
     }
   ],
   "produk": [],
@@ -377,6 +385,14 @@
       "detail": "Generate PIN untuk NANA",
       "ts": 1790320540565,
       "id": 40
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Role Management",
+      "detail": "Menambah role TIM DAPUR",
+      "ts": 1790320588378,
+      "id": 41
     }
   ],
   "stok_log": [],
