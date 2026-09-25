@@ -8,6 +8,13 @@
       "pin": "225134"
     },
     {
+      "nama": "ICHA",
+      "role": "TIM DAPUR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "235610"
+    },
+    {
       "nama": "Nana",
       "role": "Accounting",
       "kontak": "-",
@@ -393,6 +400,14 @@
       "detail": "Menambah role TIM DAPUR",
       "ts": 1790320588378,
       "id": 41
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk ICHA",
+      "ts": 1790320600256,
+      "id": 42
     }
   ],
   "stok_log": [],
