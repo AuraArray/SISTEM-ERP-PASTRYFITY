@@ -63,6 +63,16 @@
       ]
     },
     {
+      "name": "KASIR",
+      "modules": [
+        "dashboard",
+        "pos",
+        "dapur",
+        "stok",
+        "laporan"
+      ]
+    },
+    {
       "name": "Karyawan",
       "modules": [
         "karyawan",
@@ -327,8 +337,16 @@
       "pin": "8888",
       "action": "Login",
       "detail": "Masuk ke sistem",
-      "ts": 1790319224113,
-      "id": 39
+      "ts": 1790320216802,
+      "id": 37
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Role Management",
+      "detail": "Menambah role KASIR",
+      "ts": 1790320467165,
+      "id": 38
     }
   ],
   "stok_log": [],
