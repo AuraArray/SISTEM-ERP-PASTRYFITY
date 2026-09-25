@@ -286,12 +286,6 @@
   "kpi": [],
   "payment_acc": [
     {
-      "jenis": "Transfer Bank",
-      "no": "BCA 123456",
-      "nama": "PT PastryFity",
-      "id": 3
-    },
-    {
       "jenis": "Mesin EDC Debit",
       "no": "EDC Kasir 1",
       "nama": "BCA/Mandiri/BNI",
