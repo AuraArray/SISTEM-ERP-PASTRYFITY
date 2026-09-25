@@ -1,6 +1,13 @@
 {
   "users": [
     {
+      "nama": "Nana",
+      "role": "Accounting",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "442335"
+    },
+    {
       "pin": "8888",
       "nama": "Owner System",
       "role": "Super Admin",
@@ -274,6 +281,22 @@
       "detail": "Order Guest - Rp 20.000",
       "ts": 1790300831150,
       "id": 14
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790301521679,
+      "id": 31
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk Nana",
+      "ts": 1790301549116,
+      "id": 32
     }
   ],
   "stok_log": [],
