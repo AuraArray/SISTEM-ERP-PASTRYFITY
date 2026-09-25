@@ -118,7 +118,48 @@
     }
   ],
   "produk": [],
-  "trx": [],
+  "trx": [
+    {
+      "tgl": "2026-09-25",
+      "jam": "13:10",
+      "tglAmbil": "2026-09-25",
+      "jamAmbil": "13:10",
+      "cust": "1",
+      "hp": "1",
+      "items": [
+        {
+          "id": "custom_1790316640253",
+          "nama": "[Custom] A",
+          "harga": 1,
+          "modal": 0,
+          "qty": 1,
+          "max": 999,
+          "cdata": {
+            "n": "A",
+            "jns": "q",
+            "ukr": "w",
+            "mdl": "qd",
+            "cap": "q",
+            "det": "qd"
+          }
+        }
+      ],
+      "sub": 1,
+      "ppn": 0,
+      "net": 1,
+      "dp": 1,
+      "sisa": 0,
+      "stat": "Lunas",
+      "method": "",
+      "kirim": "Ambil Sendiri",
+      "kirimDet": "-",
+      "pack": "Plastik (Gratis)",
+      "type": "Normal",
+      "kasir": "Owner System",
+      "ts": 1790316646362,
+      "id": 3
+    }
+  ],
   "jurnal": [
     {
       "tgl": "2026-09-25",
@@ -133,9 +174,22 @@
       "nom": 20000,
       "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - Guest",
       "id": 2
+    },
+    {
+      "tgl": "2026-09-25",
+      "jenis": "Pendapatan Operasional (+)",
+      "nom": 1,
+      "ket": "POS Lunas [] - 1",
+      "id": 3
     }
   ],
   "crm": [
+    {
+      "hp": "1",
+      "nama": "1",
+      "total": 1,
+      "poin": 10
+    },
     {
       "hp": "A",
       "nama": "D",
@@ -280,6 +334,14 @@
       "detail": "Masuk ke sistem",
       "ts": 1790316450283,
       "id": 36
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Transaksi POS",
+      "detail": "Order 1 - Rp 1",
+      "ts": 1790316646364,
+      "id": 37
     }
   ],
   "stok_log": [],
