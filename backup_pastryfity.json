@@ -204,46 +204,6 @@
       "kasir": "Owner System",
       "ts": 1790300831125,
       "id": 2
-    },
-    {
-      "tgl": "2026-09-25",
-      "jam": "14:32",
-      "tglAmbil": "2026-09-25",
-      "jamAmbil": "18:32",
-      "cust": "Al",
-      "hp": "April",
-      "items": [
-        {
-          "id": "custom_1790321589690",
-          "nama": "[Custom] Korean",
-          "harga": 1000000,
-          "modal": 0,
-          "qty": 1,
-          "max": 999,
-          "cdata": {
-            "n": "Korean",
-            "jns": "Spongeclah ",
-            "ukr": "D12",
-            "mdl": "Snsj",
-            "cap": "Hallo",
-            "det": "Cdmsk"
-          }
-        }
-      ],
-      "sub": 1000000,
-      "ppn": 0,
-      "net": 1000000,
-      "dp": 1000000,
-      "sisa": 0,
-      "stat": "Lunas",
-      "method": "Kasir Utama - Tunai Kasir",
-      "kirim": "Ambil Sendiri",
-      "kirimDet": "-",
-      "pack": "Plastik (Gratis)",
-      "type": "Normal",
-      "kasir": "Owner System",
-      "ts": 1790321603044,
-      "id": 3
     }
   ],
   "jurnal": [
@@ -260,13 +220,6 @@
       "nom": 20000,
       "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - Guest",
       "id": 2
-    },
-    {
-      "tgl": "2026-09-25",
-      "jenis": "Pendapatan Operasional (+)",
-      "nom": 1000000,
-      "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - Al",
-      "id": 3
     }
   ],
   "crm": [
@@ -274,12 +227,6 @@
       "hp": "A",
       "nama": "D",
       "total": 10000000,
-      "poin": 10
-    },
-    {
-      "hp": "April",
-      "nama": "Al",
-      "total": 1000000,
       "poin": 10
     },
     {
@@ -476,30 +423,6 @@
       "detail": "Generate PIN untuk AYU",
       "ts": 1790320629169,
       "id": 43
-    },
-    {
-      "user": "Owner System",
-      "pin": "8888",
-      "action": "Login",
-      "detail": "Masuk ke sistem",
-      "ts": 1790320850848,
-      "id": 44
-    },
-    {
-      "user": "Owner System",
-      "pin": "8888",
-      "action": "Login",
-      "detail": "Masuk ke sistem",
-      "ts": 1790321545478,
-      "id": 46
-    },
-    {
-      "user": "Owner System",
-      "pin": "8888",
-      "action": "Transaksi POS",
-      "detail": "Order Al - Rp 1.000.000",
-      "ts": 1790321603062,
-      "id": 47
     }
   ],
   "stok_log": [],
