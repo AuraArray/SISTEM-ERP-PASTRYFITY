@@ -1,6 +1,13 @@
 {
   "users": [
     {
+      "nama": "DESVITA",
+      "role": "KASIR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "225134"
+    },
+    {
       "nama": "Nana",
       "role": "Accounting",
       "kontak": "-",
@@ -347,6 +354,14 @@
       "detail": "Menambah role KASIR",
       "ts": 1790320467165,
       "id": 38
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk DESVITA",
+      "ts": 1790320486422,
+      "id": 39
     }
   ],
   "stok_log": [],
