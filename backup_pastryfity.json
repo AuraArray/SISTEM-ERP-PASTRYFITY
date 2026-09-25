@@ -118,23 +118,65 @@
     }
   ],
   "produk": [],
-  "trx": [],
+  "trx": [
+    {
+      "tgl": "2026-09-25",
+      "jam": "08:44",
+      "tglAmbil": "2026-09-25",
+      "jamAmbil": "08:44",
+      "cust": "Guest",
+      "hp": "-",
+      "items": [
+        {
+          "id": "custom_1790300777729",
+          "nama": "[Custom] Irma",
+          "harga": 20000,
+          "modal": 0,
+          "qty": 1,
+          "max": 999,
+          "cdata": {
+            "n": "Irma",
+            "jns": "Fgg",
+            "ukr": "Dvhh",
+            "mdl": "Fchgc",
+            "cap": "Hgsvjfc",
+            "det": ""
+          }
+        }
+      ],
+      "sub": 20000,
+      "ppn": 0,
+      "net": 20000,
+      "dp": 20000,
+      "sisa": 0,
+      "stat": "Lunas",
+      "method": "Kasir Utama - Tunai Kasir",
+      "kirim": "Ambil Sendiri",
+      "kirimDet": "-",
+      "pack": "Plastik (Gratis)",
+      "type": "Normal",
+      "kasir": "Owner System",
+      "ts": 1790300831125,
+      "id": 2
+    }
+  ],
   "jurnal": [
     {
       "tgl": "2026-09-25",
       "jenis": "Pendapatan Operasional (+)",
-      "nom": 1,
-      "ket": "POS Lunas [] - 1",
-      "id": 3
+      "nom": 10000,
+      "ket": "POS DP [Kasir Utama - Tunai Kasir] - D",
+      "id": 1
+    },
+    {
+      "tgl": "2026-09-25",
+      "jenis": "Pendapatan Operasional (+)",
+      "nom": 20000,
+      "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - Guest",
+      "id": 2
     }
   ],
   "crm": [
-    {
-      "hp": "1",
-      "nama": "1",
-      "total": 1,
-      "poin": 10
-    },
     {
       "hp": "A",
       "nama": "D",
@@ -271,46 +313,36 @@
       "detail": "Masuk ke sistem",
       "ts": 1790311431685,
       "id": 35
-    },
-    {
-      "user": "Owner System",
-      "pin": "8888",
-      "action": "Login",
-      "detail": "Masuk ke sistem",
-      "ts": 1790316450283,
-      "id": 36
-    },
-    {
-      "user": "Owner System",
-      "pin": "8888",
-      "action": "Transaksi POS",
-      "detail": "Order 1 - Rp 1",
-      "ts": 1790316646364,
-      "id": 37
-    },
-    {
-      "user": "Owner System",
-      "pin": "8888",
-      "action": "Login",
-      "detail": "Masuk ke sistem",
-      "ts": 1790317481772,
-      "id": 38
     }
   ],
   "stok_log": [],
   "kpi": [],
-  "payment_acc": [],
-  "kurir": [
+  "payment_acc": [
     {
-      "nama": "Ihran",
-      "plat": "0000",
+      "jenis": "Tunai Kasir",
+      "no": "-",
+      "nama": "Kasir Utama",
       "id": 1
     },
     {
-      "nama": "Pak Le",
-      "plat": "0000",
+      "jenis": "QRIS",
+      "no": "-",
+      "nama": "QRIS PastryFity",
       "id": 2
+    },
+    {
+      "jenis": "Transfer Bank",
+      "no": "BCA 123456",
+      "nama": "PT PastryFity",
+      "id": 3
+    },
+    {
+      "jenis": "Mesin EDC Debit",
+      "no": "EDC Kasir 1",
+      "nama": "BCA/Mandiri/BNI",
+      "id": 4
     }
   ],
+  "kurir": [],
   "edit_req": []
 }
