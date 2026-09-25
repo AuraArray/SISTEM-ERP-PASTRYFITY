@@ -1,11 +1,39 @@
 {
   "users": [
     {
+      "nama": "DESVITA",
+      "role": "KASIR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "225134"
+    },
+    {
+      "nama": "ICHA",
+      "role": "TIM DAPUR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "235610"
+    },
+    {
       "nama": "Nana",
       "role": "Accounting",
       "kontak": "-",
       "detail_posisi": "-",
       "pin": "442335"
+    },
+    {
+      "nama": "AYU",
+      "role": "TIM DAPUR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "646300"
+    },
+    {
+      "nama": "NANA",
+      "role": "KASIR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "886574"
     },
     {
       "pin": "8888",
@@ -63,6 +91,16 @@
       ]
     },
     {
+      "name": "KASIR",
+      "modules": [
+        "dashboard",
+        "pos",
+        "dapur",
+        "stok",
+        "laporan"
+      ]
+    },
+    {
       "name": "Karyawan",
       "modules": [
         "karyawan",
@@ -115,6 +153,14 @@
         "karyawan",
         "panduan"
       ]
+    },
+    {
+      "name": "TIM DAPUR",
+      "modules": [
+        "pos",
+        "dapur",
+        "stok"
+      ]
     }
   ],
   "produk": [],
@@ -158,46 +204,6 @@
       "kasir": "Owner System",
       "ts": 1790300831125,
       "id": 2
-    },
-    {
-      "tgl": "2026-09-25",
-      "jam": "14:30",
-      "tglAmbil": "2026-09-25",
-      "jamAmbil": "14:30",
-      "cust": "Sasvg",
-      "hp": "08999999",
-      "items": [
-        {
-          "id": "custom_1790321475728",
-          "nama": "[Custom] KOREAN ",
-          "harga": 10000000,
-          "modal": 0,
-          "qty": 1,
-          "max": 999,
-          "cdata": {
-            "n": "KOREAN ",
-            "jns": "Sponge ",
-            "ukr": "D12",
-            "mdl": "CLASIC ",
-            "cap": "Afhvxdggv",
-            "det": "Fgbcdf"
-          }
-        }
-      ],
-      "sub": 10000000,
-      "ppn": 0,
-      "net": 10000000,
-      "dp": 10000000,
-      "sisa": 0,
-      "stat": "Lunas",
-      "method": "Kasir Utama - Tunai Kasir",
-      "kirim": "Ambil Sendiri",
-      "kirimDet": "-",
-      "pack": "Plastik (Gratis)",
-      "type": "Normal",
-      "kasir": "Owner System",
-      "ts": 1790321489362,
-      "id": 3
     }
   ],
   "jurnal": [
@@ -214,22 +220,9 @@
       "nom": 20000,
       "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - Guest",
       "id": 2
-    },
-    {
-      "tgl": "2026-09-25",
-      "jenis": "Pendapatan Operasional (+)",
-      "nom": 10000000,
-      "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - Sasvg",
-      "id": 3
     }
   ],
   "crm": [
-    {
-      "hp": "08999999",
-      "nama": "Sasvg",
-      "total": 10000000,
-      "poin": 10
-    },
     {
       "hp": "A",
       "nama": "D",
@@ -380,24 +373,64 @@
       "pin": "8888",
       "action": "Login",
       "detail": "Masuk ke sistem",
-      "ts": 1790319224113,
+      "ts": 1790320216802,
+      "id": 37
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Role Management",
+      "detail": "Menambah role KASIR",
+      "ts": 1790320467165,
+      "id": 38
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk DESVITA",
+      "ts": 1790320486422,
       "id": 39
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk NANA",
+      "ts": 1790320540565,
+      "id": 40
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Role Management",
+      "detail": "Menambah role TIM DAPUR",
+      "ts": 1790320588378,
+      "id": 41
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk ICHA",
+      "ts": 1790320600256,
+      "id": 42
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk AYU",
+      "ts": 1790320629169,
+      "id": 43
     },
     {
       "user": "Owner System",
       "pin": "8888",
       "action": "Login",
       "detail": "Masuk ke sistem",
-      "ts": 1790321108995,
-      "id": 40
-    },
-    {
-      "user": "Owner System",
-      "pin": "8888",
-      "action": "Transaksi POS",
-      "detail": "Order Sasvg - Rp 10.000.000",
-      "ts": 1790321489419,
-      "id": 41
+      "ts": 1790320850848,
+      "id": 44
     }
   ],
   "stok_log": [],
