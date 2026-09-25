@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Enterprise Accounting, POS & HPP Dashboard</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React & ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Babel Compiler -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <style>
+    /* STYLING STRUK KASIR COMPACT (58mm / 80mm) */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #receipt-print-area, #receipt-print-area * {
+        visibility: visible;
+      }
+      #receipt-print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 58mm;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 11px;
+        line-height: 1.2;
+        color: #000;
+        padding: 0;
+        margin: 0;
+      }
+      @page {
+        size: 58mm auto;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased selection:bg-blue-500 selection:text-white">
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useCallback } = React;
+
+    // --- KONFIGURASI GITHUB CLOUD STORAGE (GIST API) ---
+    const GITHUB_CONFIG = {
+      TOKEN: "", // Masukkan GitHub Token (ghp_xxxx)
+      GIST_ID: "", // Masukkan Gist ID
+    };
+
+    const INITIAL_CATEGORIES = {
+      PEMASUKAN: ["Penjualan Utama", "Pendapatan Jasa", "Investasi"],
+      PENGELUARAN: ["HPP / COGS", "Operasional", "Payroll SDM", "Pajak"],
+    };
+
+    function App() {
+      // --- STATE MANAGEMENT ---
+      const [pin, setPin] = useState("");
+      const [isAuthenticated, setIsAuthenticated] = useState(false);
+      const [savedPin, setSavedPin] = useState("1234");
+      
+      const [transactions, setTransactions] = useState([]);
+      const [hppRecords, setHppRecords] = useState([]);
+      const [categories, setCategories] = useState(INITIAL_CATEGORIES);
+      const [syncStatus, setSyncStatus] = useState("synced");
+      const [btDevice, setBtDevice] = useState(null);
+      const [btStatus, setBtStatus] = useState("Disconnected");
+      const [activeTab, setActiveTab] = useState("ACCOUNTING"); // 'ACCOUNTING' | 'HPP'
+
+      // Form Transaksi State
+      const [formData, setFormData] = useState({
+        date: new Date().toISOString().split("T")[0],
+        description: "",
+        category: "Penjualan Utama",
+        type: "KREDIT",
+        amount: "",
+        account: "Kas Utama",
+      });
+
+      // Form HPP State
+      const [hppForm, setHppForm] = useState({
+        date: new Date().toISOString().split("T")[0],
+        productName: "",
+        initialStock: "",
+        purchases: "",
+        endingStock: "",
+      });
+
+      // Filter State
+      const [filterPeriod, setFilterPeriod] = useState({
+        startDate: "2026-01-01",
+        endDate: "2026-12-31",
+        category: "ALL",
+      });
+
+      const [printingTrx, setPrintingTrx] = useState(null);
+
+      // --- 1. SINKRONISASI CLOUD GITHUB ---
+      const syncWithGithubCloud = useCallback(async (action = "PULL", payloadData = null) => {
+        if (!GITHUB_CONFIG.GIST_ID || !GITHUB_CONFIG.TOKEN) {
+          if (action === "PULL") {
+            const localData = localStorage.getItem("APP_CLOUD_DATA");
+            if (localData) {
+              const parsed = JSON.parse(localData);
+              setTransactions(parsed.transactions || []);
+              setHppRecords(parsed.hppRecords || []);
+              if (parsed.categories) setCategories(parsed.categories);
+              if (parsed.pin) setSavedPin(parsed.pin);
+            }
+          } else if (action === "PUSH") {
+            localStorage.setItem("APP_CLOUD_DATA", JSON.stringify(payloadData));
+          }
+          return;
+        }
+
+        setSyncStatus("syncing");
+        try {
+          if (action === "PULL") {
+            const res = await fetch(`https://api.github.com/gists/${GITHUB_CONFIG.GIST_ID}`, {
+              headers: { Authorization: `token ${GITHUB_CONFIG.TOKEN}` }
+            });
+            const data = await res.json();
+            const content = JSON.parse(data.files["accounting_db.json"].content);
+            setTransactions(content.transactions || []);
+            setHppRecords(content.hppRecords || []);
+            if (content.categories) setCategories(content.categories);
+            if (content.pin) setSavedPin(content.pin);
+          } else if (action === "PUSH") {
+            await fetch(`https://api.github.com/gists/${GITHUB_CONFIG.GIST_ID}`, {
+              method: "PATCH",
+              headers: {
+                Authorization: `token ${GITHUB_CONFIG.TOKEN}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                files: {
+                  "accounting_db.json": {
+                    content: JSON.stringify(payloadData, null, 2)
+                  }
+                }
+              })
+            });
+          }
+          setSyncStatus("synced");
+        } catch (err) {
+          console.error("Cloud Sync Error:", err);
+          setSyncStatus("error");
+        }
+      }, []);
+
+      useEffect(() => {
+        syncWithGithubCloud("PULL");
+      }, [syncWithGithubCloud]);
+
+      // --- 2. PENAMBAHAN KATEGORI MANUAL ---
+      const handleAddManualCategory = () => {
+        const catType = prompt("Pilih jenis kategori:\n1. PEMASUKAN\n2. PENGELUARAN");
+        if (!catType) return;
+        
+        const newCatName = prompt("Masukkan Nama Kategori Baru:");
+        if (!newCatName || newCatName.trim() === "") return;
+
+        const key = catType === "1" ? "PEMASUKAN" : "PENGELUARAN";
+        if (categories[key].includes(newCatName)) {
+          alert("Kategori tersebut sudah ada!");
+          return;
+        }
+
+        const updatedCategories = {
+          ...categories,
+          [key]: [...categories[key], newCatName.trim()]
+        };
+
+        setCategories(updatedCategories);
+        syncWithGithubCloud("PUSH", { transactions, hppRecords, categories: updatedCategories, pin: savedPin });
+        alert(`Kategori '${newCatName}' berhasil ditambahkan ke ${key}!`);
+      };
+
+      // --- 3. INPUT TRANSAKSI UTAMA ---
+      const handleAddTransaction = (e) => {
+        e.preventDefault();
+        if (!formData.amount || !formData.description) return;
+
+        const numAmount = parseFloat(formData.amount);
+        const newTrx = {
+          id: `TRX-${Date.now().toString().slice(-6)}`,
+          date: formData.date,
+          description: formData.description,
+          category: formData.category,
+          type: formData.type,
+          debit: formData.type === "DEBIT" ? numAmount : 0,
+          kredit: formData.type === "KREDIT" ? numAmount : 0,
+          account: formData.account,
+        };
+
+        const updatedList = [newTrx, ...transactions];
+        setTransactions(updatedList);
+        syncWithGithubCloud("PUSH", { transactions: updatedList, hppRecords, categories, pin: savedPin });
+
+        setFormData({
+          date: new Date().toISOString().split("T")[0],
+          description: "",
+          category: categories[formData.type][0] || "",
+          type: formData.type,
+          amount: "",
+          account: "Kas Utama",
+        });
+      };
+
+      // --- 4. FORM & LOGIKA HPP (HARGA POKOK PENJUALAN) ---
+      const handleAddHPP = (e) => {
+        e.preventDefault();
+        const initStock = parseFloat(hppForm.initialStock) || 0;
+        const buy = parseFloat(hppForm.purchases) || 0;
+        const endStock = parseFloat(hppForm.endingStock) || 0;
+
+        const hppTotal = initStock + buy - endStock;
+
+        const newHppRecord = {
+          id: `HPP-${Date.now().toString().slice(-6)}`,
+          date: hppForm.date,
+          productName: hppForm.productName,
+          initialStock: initStock,
+          purchases: buy,
+          endingStock: endStock,
+          hppTotal: hppTotal,
+        };
+
+        const updatedHppList = [newHppRecord, ...hppRecords];
+        setHppRecords(updatedHppList);
+
+        // Otomatis buatkan transaksi Pengeluaran HPP di Akuntansi
+        const autoHppTrx = {
+          id: `TRX-HPP-${Date.now().toString().slice(-4)}`,
+          date: hppForm.date,
+          description: `Beban HPP: ${hppForm.productName}`,
+          category: "HPP / COGS",
+          type: "DEBIT",
+          debit: hppTotal,
+          kredit: 0,
+          account: "Persediaan",
+        };
+
+        const updatedTrxList = [autoHppTrx, ...transactions];
+        setTransactions(updatedTrxList);
+
+        syncWithGithubCloud("PUSH", { transactions: updatedTrxList, hppRecords: updatedHppList, categories, pin: savedPin });
+
+        setHppForm({
+          date: new Date().toISOString().split("T")[0],
+          productName: "",
+          initialStock: "",
+          purchases: "",
+          endingStock: "",
+        });
+
+        alert("Perhitungan HPP Berhasil Disimpan & Dicatat ke Pengeluaran Akuntansi!");
+      };
+
+      // --- 5. PERBAIKAN BLUETOOTH & EPSON PRINT STRUK (SANGAT RAPI & PADAT) ---
+      const connectBluetoothPrinter = async () => {
+        if (!navigator.bluetooth) {
+          alert("Browser Anda belum mendukung Direct Web Bluetooth API. Gunakan Chrome di Android/Desktop.");
+          return;
+        }
+
+        try {
+          setBtStatus("Connecting...");
+          const device = await navigator.bluetooth.requestDevice({
+            acceptAllDevices: true,
+            optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
+          });
+
+          const server = await device.gatt.connect();
+          setBtDevice(server);
+          setBtStatus(`Connected: ${device.name || 'Printer Thermal'}`);
+        } catch (err) {
+          console.error("Bluetooth Connect Error:", err);
+          setBtStatus("Disconnected");
+        }
+      };
+
+      const printReceipt = async (trx) => {
+        setPrintingTrx(trx);
+
+        // Jika terhubung via Bluetooth Thermal
+        if (btDevice && btDevice.connected) {
+          try {
+            const encoder = new TextEncoder();
+            // ESC/POS Commands: Reset, Center, Normal Text, Line Feed, Cut
+            const ESC = '\x1B';
+            const GS = '\x1D';
+            
+            const rawCommands = 
+              `${ESC}@` + // Init Printer
+              `${ESC}a\x01` + // Center align
+              `POS ACCOUNTING\n` +
+              `STRUK PENJUALAN / TRX\n` +
+              `--------------------------------\n` +
+              `${ESC}a\x00` + // Left align
+              `ID   : ${trx.id}\n` +
+              `TGL  : ${trx.date}\n` +
+              `KAT  : ${trx.category}\n` +
+              `KET  : ${trx.description}\n` +
+              `--------------------------------\n` +
+              `TOTAL: Rp ${(trx.kredit || trx.debit).toLocaleString('id-ID')}\n` +
+              `--------------------------------\n` +
+              `${ESC}a\x01` + // Center align
+              `TERIMA KASIH\n\n\n` +
+              `${GS}V\x41\x03`; // Partial Cut Paper
+
+            const service = await btDevice.getPrimaryService('000018f0-0000-1000-8000-00805f9b34fb');
+            const characteristic = await service.getCharacteristic('00002af1-0000-1000-8000-00805f9b34fb');
+            await characteristic.writeValue(encoder.encode(rawCommands));
+            return;
+          } catch (err) {
+            console.error("Bluetooth print error, falling back to window.print():", err);
+          }
+        }
+
+        // Print Biasa (Epson USB / System Print)
+        setTimeout(() => {
+          window.print();
+        }, 100);
+      };
+
+      // --- LOGIKA AKUNTANSI METRIK ---
+      const filteredTransactions = useMemo(() => {
+        return transactions.filter((t) => {
+          const dateMatch = t.date >= filterPeriod.startDate && t.date <= filterPeriod.endDate;
+          const catMatch = filterPeriod.category === "ALL" || t.category === filterPeriod.category;
+          return dateMatch && catMatch;
+        });
+      }, [transactions, filterPeriod]);
+
+      const totals = useMemo(() => {
+        return filteredTransactions.reduce(
+          (acc, curr) => {
+            acc.debit += Number(curr.debit || 0);
+            acc.kredit += Number(curr.kredit || 0);
+            return acc;
+          },
+          { debit: 0, kredit: 0 }
+        );
+      }, [filteredTransactions]);
+
+      const totalHPP = useMemo(() => {
+        return hppRecords.reduce((sum, h) => sum + Number(h.hppTotal || 0), 0);
+      }, [hppRecords]);
+
+      // --- LOGIN SCREEN ---
+      if (!isAuthenticated) {
+        return (
+          <div className="min-h-screen flex items-center justify-center bg-slate-900 p-4">
+            <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-800 mb-2">Akses Terkunci</h2>
+              <p className="text-xs sm:text-sm text-slate-500 mb-6">Masukkan PIN Akses Laporan Keuangan & POS</p>
+              <form onSubmit={(e) => { e.preventDefault(); pin === savedPin ? setIsAuthenticated(true) : alert("PIN Salah!"); }} className="space-y-4">
+                <input
+                  type="password"
+                  maxLength="6"
+                  placeholder="****"
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value)}
+                  className="w-full text-center text-2xl tracking-widest px-4 py-3 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition">
+                  Buka Dashboard
+                </button>
+              </form>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen p-3 sm:p-6 lg:p-8 max-w-[1920px] mx-auto">
+          {/* HEADER */}
+          <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900">
+                  Enterprise Accounting & POS Dashboard
+                </h1>
+                <span className={`text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full ${
+                  syncStatus === 'synced' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                }`}>
+                  ☁️ {syncStatus === 'synced' ? 'Cloud Synced' : 'Syncing...'}
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">Multi-Device System & Automatic ESC/POS Thermal Printing</p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={connectBluetoothPrinter}
+                className="text-xs sm:text-sm font-semibold px-3 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl transition flex items-center gap-1.5"
+              >
+                <span>🖨️</span> {btStatus}
+              </button>
+              <button
+                onClick={handleAddManualCategory}
+                className="text-xs sm:text-sm font-semibold px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl transition"
+              >
+                + Tambah Kategori
+              </button>
+              <button
+                onClick={() => {
+                  const np = prompt("Masukkan PIN Baru:");
+                  if (np) {
+                    setSavedPin(np);
+                    syncWithGithubCloud("PUSH", { transactions, hppRecords, categories, pin: np });
+                    alert("PIN Berhasil diubah!");
+                  }
+                }}
+                className="text-xs sm:text-sm font-semibold px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition"
+              >
+                🔑 Ubah PIN
+              </button>
+              <button
+                onClick={() => setIsAuthenticated(false)}
+                className="text-xs sm:text-sm font-semibold px-3 py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl transition"
+              >
+                🔒 Kunci
+              </button>
+            </div>
+          </header>
+
+          {/* TAB NAVIGASI DASAR */}
+          <div className="flex gap-2 mb-6">
+            <button
+              onClick={() => setActiveTab("ACCOUNTING")}
+              className={`px-5 py-2.5 rounded-xl font-bold text-sm transition ${
+                activeTab === "ACCOUNTING"
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
+                  : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
+              }`}
+            >
+              📊 Laporan & Input Akuntansi
+            </button>
+            <button
+              onClick={() => setActiveTab("HPP")}
+              className={`px-5 py-2.5 rounded-xl font-bold text-sm transition ${
+                activeTab === "HPP"
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
+                  : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
+              }`}
+            >
+              📦 Kalkulator & Dashboard HPP
+            </button>
+          </div>
+
+          {/* METRIC CARDS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <span className="text-xs font-bold text-slate-400 uppercase">Total Kredit (Pemasukan)</span>
+              <h3 className="text-xl sm:text-2xl font-black text-emerald-600 mt-1">
+                Rp {totals.kredit.toLocaleString("id-ID")}
+              </h3>
+            </div>
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <span className="text-xs font-bold text-slate-400 uppercase">Total Debit (Pengeluaran)</span>
+              <h3 className="text-xl sm:text-2xl font-black text-rose-600 mt-1">
+                Rp {totals.debit.toLocaleString("id-ID")}
+              </h3>
+            </div>
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <span className="text-xs font-bold text-slate-400 uppercase">Total HPP Terhitung</span>
+              <h3 className="text-xl sm:text-2xl font-black text-indigo-600 mt-1">
+                Rp {totalHPP.toLocaleString("id-ID")}
+              </h3>
+            </div>
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <span className="text-xs font-bold text-slate-400 uppercase">Net Profit (Laba Bersih)</span>
+              <h3 className={`text-xl sm:text-2xl font-black mt-1 ${
+                totals.kredit - totals.debit >= 0 ? "text-blue-600" : "text-rose-600"
+              }`}>
+                Rp {(totals.kredit - totals.debit).toLocaleString("id-ID")}
+              </h3>
+            </div>
+          </div>
+
+          {/* CONTENT TAB 1: AKUNTANSI UTAMA */}
+          {activeTab === "ACCOUNTING" && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* FORM INPUT AKUNTANSI */}
+              <div className="lg:col-span-4 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-extrabold text-slate-800 text-base sm:text-lg">Input Akuntansi</h3>
+                  <button
+                    type="button"
+                    onClick={handleAddManualCategory}
+                    className="text-[11px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg hover:bg-blue-100"
+                  >
+                    + Kategori Manual
+                  </button>
+                </div>
+
+                <form onSubmit={handleAddTransaction} className="space-y-3 sm:space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">TANGGAL</label>
+                    <input
+                      type="date"
+                      value={formData.date}
+                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">JENIS TRANSAKSI</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, type: "KREDIT", category: categories.PEMASUKAN[0] || "" })}
+                        className={`py-2 rounded-xl text-xs font-bold border transition ${
+                          formData.type === "KREDIT" ? "bg-emerald-50 border-emerald-500 text-emerald-700" : "text-slate-500"
+                        }`}
+                      >
+                        (+) Kredit (Masuk)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, type: "DEBIT", category: categories.PENGELUARAN[0] || "" })}
+                        className={`py-2 rounded-xl text-xs font-bold border transition ${
+                          formData.type === "DEBIT" ? "bg-rose-50 border-rose-500 text-rose-700" : "text-slate-500"
+                        }`}
+                      >
+                        (-) Debit (Keluar)
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">KATEGORI</label>
+                    <select
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-xl text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {(formData.type === "KREDIT" ? categories.PEMASUKAN : categories.PENGELUARAN).map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">NOMINAL (RP)</label>
+                    <input
+                      type="number"
+                      placeholder="0"
+                      value={formData.amount}
+                      onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">KETERANGAN</label>
+                    <input
+                      type="text"
+                      placeholder="Deskripsi ringkas"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-200">
+                    Simpan Transaksi
+                  </button>
+                </form>
+              </div>
+
+              {/* TABEL GENERAL LEDGER */}
+              <div className="lg:col-span-8 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                  <h3 className="font-extrabold text-slate-800 text-base sm:text-lg">General Ledger</h3>
+                  
+                  <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto text-xs">
+                    <input
+                      type="date"
+                      value={filterPeriod.startDate}
+                      onChange={(e) => setFilterPeriod({ ...filterPeriod, startDate: e.target.value })}
+                      className="px-2 py-1 border rounded-lg"
+                    />
+                    <span>s/d</span>
+                    <input
+                      type="date"
+                      value={filterPeriod.endDate}
+                      onChange={(e) => setFilterPeriod({ ...filterPeriod, endDate: e.target.value })}
+                      className="px-2 py-1 border rounded-lg"
+                    />
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs sm:text-sm">
+                    <thead>
+                      <tr className="border-b bg-slate-50 text-slate-500 font-bold uppercase">
+                        <th className="py-3 px-3">Tanggal</th>
+                        <th className="py-3 px-3">Kategori & Deskripsi</th>
+                        <th className="py-3 px-3 text-right">Debit</th>
+                        <th className="py-3 px-3 text-right">Kredit</th>
+                        <th className="py-3 px-3 text-center">Cetak</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {filteredTransactions.length === 0 ? (
+                        <tr>
+                          <td colSpan="5" className="text-center py-6 text-slate-400">Belum ada data.</td>
+                        </tr>
+                      ) : (
+                        filteredTransactions.map((trx) => (
+                          <tr key={trx.id} className="hover:bg-slate-50 transition">
+                            <td className="py-3 px-3 whitespace-nowrap">
+                              <div className="font-bold text-slate-800">{trx.date}</div>
+                              <div className="text-[10px] text-slate-400 font-mono">{trx.id}</div>
+                            </td>
+                            <td className="py-3 px-3">
+                              <div className="font-semibold text-slate-800">{trx.description}</div>
+                              <span className="inline-block text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500 mt-0.5">
+                                {trx.category}
+                              </span>
+                            </td>
+                            <td className="py-3 px-3 text-right font-bold text-rose-600 whitespace-nowrap">
+                              {trx.debit > 0 ? `Rp ${trx.debit.toLocaleString('id-ID')}` : "-"}
+                            </td>
+                            <td className="py-3 px-3 text-right font-bold text-emerald-600 whitespace-nowrap">
+                              {trx.kredit > 0 ? `Rp ${trx.kredit.toLocaleString('id-ID')}` : "-"}
+                            </td>
+                            <td className="py-3 px-3 text-center">
+                              <button
+                                onClick={() => printReceipt(trx)}
+                                className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition"
+                              >
+                                🖨️ Struk
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* CONTENT TAB 2: KALKULATOR & DASHBOARD HPP */}
+          {activeTab === "HPP" && (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* FORM KALKULATOR HPP */}
+              <div className="lg:col-span-4 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 className="font-extrabold text-slate-800 text-base sm:text-lg mb-4">Input & Kalkulator HPP</h3>
+                <form onSubmit={handleAddHPP} className="space-y-3 sm:space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">TANGGAL</label>
+                    <input
+                      type="date"
+                      value={hppForm.date}
+                      onChange={(e) => setHppForm({ ...hppForm, date: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">NAMA PRODUK / BATCH</label>
+                    <input
+                      type="text"
+                      placeholder="Contoh: Produksi Baju Batch A"
+                      value={hppForm.productName}
+                      onChange={(e) => setHppForm({ ...hppForm, productName: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">PERSEDIAAN AWAL (RP)</label>
+                    <input
+                      type="number"
+                      placeholder="0"
+                      value={hppForm.initialStock}
+                      onChange={(e) => setHppForm({ ...hppForm, initialStock: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">PEMBELIAN BERSIH (RP)</label>
+                    <input
+                      type="number"
+                      placeholder="0"
+                      value={hppForm.purchases}
+                      onChange={(e) => setHppForm({ ...hppForm, purchases: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">PERSEDIAAN AKHIR (RP)</label>
+                    <input
+                      type="number"
+                      placeholder="0"
+                      value={hppForm.endingStock}
+                      onChange={(e) => setHppForm({ ...hppForm, endingStock: e.target.value })}
+                      className="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-600">
+                    <strong>Rumus:</strong> HPP = (Persediaan Awal + Pembelian) - Persediaan Akhir
+                  </div>
+
+                  <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-indigo-200">
+                    Hitung & Catat HPP
+                  </button>
+                </form>
+              </div>
+
+              {/* TABEL RIWAYAT HPP */}
+              <div className="lg:col-span-8 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <h3 className="font-extrabold text-slate-800 text-base sm:text-lg mb-4">Riwayat Perhitungan HPP</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs sm:text-sm">
+                    <thead>
+                      <tr className="border-b bg-slate-50 text-slate-500 font-bold uppercase">
+                        <th className="py-3 px-3">Tanggal / Kode</th>
+                        <th className="py-3 px-3">Produk</th>
+                        <th className="py-3 px-3 text-right">Pers. Awal</th>
+                        <th className="py-3 px-3 text-right">Pembelian</th>
+                        <th className="py-3 px-3 text-right">Pers. Akhir</th>
+                        <th className="py-3 px-3 text-right">Total HPP</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {hppRecords.length === 0 ? (
+                        <tr>
+                          <td colSpan="6" className="text-center py-6 text-slate-400">Belum ada perhitungan HPP.</td>
+                        </tr>
+                      ) : (
+                        hppRecords.map((h) => (
+                          <tr key={h.id} className="hover:bg-slate-50 transition">
+                            <td className="py-3 px-3 whitespace-nowrap">
+                              <div className="font-bold text-slate-800">{h.date}</div>
+                              <div className="text-[10px] text-slate-400 font-mono">{h.id}</div>
+                            </td>
+                            <td className="py-3 px-3 font-semibold text-slate-800">{h.productName}</td>
+                            <td className="py-3 px-3 text-right">Rp {h.initialStock.toLocaleString('id-ID')}</td>
+                            <td className="py-3 px-3 text-right">Rp {h.purchases.toLocaleString('id-ID')}</td>
+                            <td className="py-3 px-3 text-right">Rp {h.endingStock.toLocaleString('id-ID')}</td>
+                            <td className="py-3 px-3 text-right font-black text-indigo-600 whitespace-nowrap">
+                              Rp {h.hppTotal.toLocaleString('id-ID')}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* AREA PRINT STRUK KASIR COMPACT EPSON */}
+          <div id="receipt-print-area">
+            {printingTrx && (
+              <div>
+                <div style={{ textAlign: "center", fontWeight: "bold" }}>POS ACCOUNTING</div>
+                <div style={{ textAlign: "center" }}>========================</div>
+                <div>ID  : {printingTrx.id}</div>
+                <div>TGL : {printingTrx.date}</div>
+                <div>KAT : {printingTrx.category}</div>
+                <div>KET : {printingTrx.description}</div>
+                <div>========================</div>
+                <div style={{ fontWeight: "bold", fontSize: "12px" }}>
+                  TOTAL: Rp {(printingTrx.kredit || printingTrx.debit).toLocaleString('id-ID')}
+                </div>
+                <div>========================</div>
+                <div style={{ textAlign: "center", marginTop: "4px" }}>-- TERIMA KASIH --</div>
+              </div>
+            )}
+          </div>
+
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
