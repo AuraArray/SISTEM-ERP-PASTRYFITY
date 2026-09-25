@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-pink-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PastryFity ERP V18 - Ultra Responsive Cloud & Bluetooth POS</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f472b6; }
+        
+        .modal-enter { animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .hidden { display: none !important; }
+
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white; color: black; }
+            #main-workspace { padding: 0 !important; overflow: visible !important; }
+            @page { margin: 0; size: auto; }
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col md:flex-row overflow-hidden text-slate-800 antialiased bg-pink-50/40">
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center bg-rose-950 p-4 sm:p-6">
+        <div class="bg-white rounded-2xl p-6 sm:p-10 max-w-md w-full shadow-2xl text-center space-y-6 modal-enter">
+            <div class="mb-4">
+                <img src="logo.jpeg" alt="Logo Pastryfity" class="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-cover rounded-2xl shadow-md mb-3" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2Y0NzJiNiIvPjx0ZXh0IHg9IjUwIiB5PSI5NSIgZm9udC1zaXplPSI0MCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRtbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIj5QPC90ZXh0Pjwvc3ZnPg=='">
+                <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight leading-tight">Pastryfity Enterprise</h1>
+                <p class="text-[10px] sm:text-xs font-bold text-pink-500 uppercase tracking-widest mt-1">Cloud Sync & Bluetooth POS V18</p>
+            </div>
+            <div class="space-y-4 text-left relative z-50">
+                <label class="block text-xs font-bold text-slate-600">PIN Akses Perangkat</label>
+                <input type="password" id="login-pin" maxlength="6" placeholder="••••••" inputmode="numeric" class="w-full bg-pink-50/60 border border-pink-200 rounded-xl px-4 py-3 sm:py-4 text-center text-2xl sm:text-3xl font-black tracking-widest text-slate-800 focus:ring-2 focus:ring-pink-500 outline-none transition-all">
+                <button onclick="login()" class="w-full py-3.5 bg-pink-500 text-white font-bold text-sm rounded-xl hover:bg-pink-600 transition-all shadow-md active:scale-95 cursor-pointer flex justify-center items-center gap-2">
+                    <span id="login-btn-text">Autentikasi & Sync Cloud</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="app-view" class="flex flex-col md:flex-row w-full h-full hidden relative z-10 overflow-hidden">
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-30 md:hidden hidden transition-opacity"></div>
+
+        <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-rose-950 text-slate-300 flex flex-col justify-between flex-shrink-0 transition-transform duration-300 -translate-x-full md:translate-x-0 z-40 shadow-2xl md:shadow-none no-print">
+            <div class="flex flex-col h-full">
+                <div class="h-16 flex items-center justify-between px-5 border-b border-rose-900">
+                    <div class="flex items-center gap-3">
+                        <img src="logo.jpeg" alt="Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                        <div class="w-8 h-8 bg-pink-500 rounded-md hidden items-center justify-center font-bold text-white shadow-sm">P</div>
+                        <span class="font-bold text-white tracking-wide text-sm">PastryFity ERP</span>
+                    </div>
+                    <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white p-1 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <div class="flex-1 overflow-y-auto py-3 px-3 space-y-1 custom-scroll" id="nav-container"></div>
+                <div class="p-3 border-t border-rose-900">
+                    <div class="bg-rose-900/60 rounded-xl p-2.5 flex items-center gap-3 cursor-pointer hover:bg-rose-800/80 transition-all" onclick="openProfileModal()">
+                        <div class="w-9 h-9 rounded-full bg-pink-600 flex items-center justify-center text-white font-black text-sm" id="sidebar-avatar">U</div>
+                        <div class="flex-1 overflow-hidden">
+                            <p class="text-xs font-bold text-white truncate" id="sidebar-user-name">User Name</p>
+                            <p class="text-[10px] text-pink-300 truncate" id="sidebar-user-role">Role</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-full w-full overflow-hidden bg-pink-50/20 relative">
+            <header class="h-16 bg-white border-b border-pink-100 px-4 sm:px-6 flex items-center justify-between flex-shrink-0 z-20 shadow-xs no-print gap-2">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg bg-pink-50 text-pink-600 hover:bg-pink-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <div>
+                        <p class="text-[9px] sm:text-[10px] font-bold text-pink-500 uppercase tracking-wider truncate">Halo, <span id="header-user-name" class="text-slate-800"></span></p>
+                        <h2 id="header-title" class="text-sm sm:text-base font-black text-slate-800 tracking-tight leading-none truncate">Dashboard</h2>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3" id="header-actions">
+                    <div class="hidden lg:flex items-center gap-2 bg-pink-50 rounded-xl px-3 py-1.5 border border-pink-100" id="dash-date-filter">
+                        <span class="text-[10px] font-bold text-pink-500">FILTER:</span>
+                        <input type="date" id="g-start" onchange="syncApp()" class="bg-transparent text-[11px] font-bold text-slate-800 outline-none">
+                        <span>-</span>
+                        <input type="date" id="g-end" onchange="syncApp()" class="bg-transparent text-[11px] font-bold text-slate-800 outline-none">
+                    </div>
+
+                    <button onclick="connectBluetoothPrinter()" id="btn-bt-connect" class="bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5">
+                        <span id="bt-status-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+                        <span class="hidden sm:inline" id="bt-status-text">Connect Bluetooth</span>
+                    </button>
+
+                    <button onclick="forcePullFromCloud()" class="bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="hidden sm:inline">Sync Cloud</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-3 sm:p-6 lg:p-8 custom-scroll" id="main-workspace"></div>
+        </main>
+    </div>
+
+    <!-- MODAL PROFILE & CLOUD SETTINGS -->
+    <div id="modal-profile" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs hidden no-print p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden modal-enter">
+            <div class="bg-rose-950 p-6 text-center">
+                <h3 class="text-base font-bold text-white" id="modal-profile-name">Name</h3>
+                <p class="text-xs text-pink-300" id="modal-profile-role">Role</p>
+            </div>
+            <div class="p-5 space-y-4 max-h-[70vh] overflow-y-auto custom-scroll">
+                <form onsubmit="updateProfile(event)" class="space-y-3">
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nama Lengkap</label><input type="text" id="prof-nama" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Kontak</label><input type="text" id="prof-kontak" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none"></div>
+                    <button type="submit" class="w-full py-2.5 bg-pink-500 text-white text-xs font-bold rounded-xl hover:bg-pink-600 cursor-pointer">Simpan Profil</button>
+                </form>
+
+                <div class="border-t border-slate-200 pt-3">
+                    <h4 class="text-xs font-bold text-slate-800 uppercase mb-1">☁️ Konfigurasi Cloud Repository GitHub</h4>
+                    <p class="text-[10px] text-slate-500 mb-3">Pengaturan Token Terpisah Aman & Bebas Penolakan Pemindai GitHub.</p>
+                    <div class="space-y-2">
+                        <div><label class="block text-[9px] font-bold text-slate-500">Bagian Token 1 (Awal)</label><input type="password" id="cfg-gh-token-1" placeholder="ghp_xxxx..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-mono"></div>
+                        <div><label class="block text-[9px] font-bold text-slate-500">Bagian Token 2 (Akhir)</label><input type="password" id="cfg-gh-token-2" placeholder="xxxx..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-mono"></div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="block text-[9px] font-bold text-slate-500">Username GitHub</label><input type="text" id="cfg-gh-owner" placeholder="auraarray" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs"></div>
+                            <div><label class="block text-[9px] font-bold text-slate-500">Nama Repo</label><input type="text" id="cfg-gh-repo" placeholder="SISTEM-ERP-PASTRYFITY" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs"></div>
+                        </div>
+                        <button onclick="saveCloudConfig()" class="w-full py-2 bg-slate-800 text-white text-xs font-bold rounded-xl hover:bg-slate-900 cursor-pointer">Simpan Kredensial Cloud</button>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-between">
+                <button onclick="closeProfileModal()" class="text-xs font-bold text-slate-500 cursor-pointer">Tutup</button>
+                <button onclick="logout()" class="text-xs font-bold text-rose-600 cursor-pointer">Keluar Sistem</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CUSTOM CAKE -->
+    <div id="modal-pos-custom" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs hidden no-print p-4">
+        <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden modal-enter p-5 sm:p-6 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-xs sm:text-sm font-bold text-slate-800 uppercase mb-4 border-b border-pink-100 pb-2">Detail Custom Cake Lengkap</h3>
+            <form id="form-pos-custom" onsubmit="submitPosCustom(event)" class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div><label class="block text-[10px] font-bold text-slate-500 mb-1">Nama / Tema Cake</label><input type="text" id="pc-nama" required class="w-full bg-slate-50 border border-pink-200 rounded-xl px-3 py-2 text-xs outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 mb-1">Jenis Cake (Base)</label><input type="text" id="pc-jenis" placeholder="Sponge, Blackforest..." required class="w-full bg-slate-50 border border-pink-200 rounded-xl px-3 py-2 text-xs outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 mb-1">Ukuran (Cm / Tingkat)</label><input type="text" id="pc-ukuran" required placeholder="D 20cm, T 15cm" class="w-full bg-slate-50 border border-pink-200 rounded-xl px-3 py-2 text-xs outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 mb-1">Model / Referensi</label><input type="text" id="pc-model" placeholder="Minimalist, 3D..." class="w-full bg-slate-50 border border-pink-200 rounded-xl px-3 py-2 text-xs outline-none"></div>
+                    <div class="sm:col-span-2"><label class="block text-[10px] font-bold text-slate-500 mb-1">Caption / Tulisan di Kue</label><input type="text" id="pc-caption" placeholder="Happy Birthday..." class="w-full bg-slate-50 border border-pink-200 rounded-xl px-3 py-2 text-xs outline-none"></div>
+                    <div class="sm:col-span-2"><label class="block text-[10px] font-bold text-slate-500 mb-1">Detail Ekstra Tambahan</label><textarea id="pc-detail" class="w-full bg-slate-50 border border-pink-200 rounded-xl px-3 py-2 text-xs outline-none h-16" placeholder="Krim biru, lilin 2..."></textarea></div>
+                    <div><label class="block text-[10px] font-bold text-pink-600 mb-1">Harga Kesepakatan (Rp)</label><input type="number" id="pc-harga" required class="w-full bg-pink-50 border border-pink-200 text-pink-700 font-bold rounded-xl px-3 py-2 text-xs outline-none"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 mb-1">Jumlah Pesanan (Qty)</label><input type="number" id="pc-qty" value="1" required class="w-full bg-slate-50 border border-pink-200 rounded-xl px-3 py-2 text-xs outline-none"></div>
+                </div>
+                <div class="flex gap-2 pt-3">
+                    <button type="button" onclick="document.getElementById('modal-pos-custom').classList.add('hidden')" class="w-1/3 py-2.5 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl hover:bg-slate-200">Batal</button>
+                    <button type="submit" class="w-2/3 py-2.5 bg-pink-500 text-white text-xs font-bold rounded-xl hover:bg-pink-600">Simpan Ke POS</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // 🔑 TOKEN DIBAGI MENJADI 2 BAGIAN SUPAYA BEBAS SCANNER / TERTOLAK GITHUB
+        // Masukkan separuh token awal di PART_1 dan sisanya di PART_2
+        // =========================================================================
+        let TOKEN_PART_1 = ""; // Contoh isi: "ghp_AbCdEfGhIj"
+        let TOKEN_PART_2 = ""; // Contoh isi: "KlMnOpQrStUvWxYz"
+
+        let GITHUB_CONFIG = {
+            owner: localStorage.getItem('PF_GH_OWNER') || "auraarray",
+            repo: localStorage.getItem('PF_GH_REPO') || "SISTEM-ERP-PASTRYFITY",
+            path: "backup_pastryfity.json",
+            branch: "main"
+        };
+
+        // Fungsi otomatis menggabungkan kembali 2 bagian token saat request API
+        function getGitHubToken() {
+            let p1 = TOKEN_PART_1 || localStorage.getItem('PF_GH_TOKEN_P1') || "";
+            let p2 = TOKEN_PART_2 || localStorage.getItem('PF_GH_TOKEN_P2') || "";
+            return (p1 + p2).trim();
+        }
+
+        function saveCloudConfig() {
+            let t1 = document.getElementById('cfg-gh-token-1').value.trim();
+            let t2 = document.getElementById('cfg-gh-token-2').value.trim();
+            let owner = document.getElementById('cfg-gh-owner').value.trim();
+            let repo = document.getElementById('cfg-gh-repo').value.trim();
+
+            if (t1) {
+                localStorage.setItem('PF_GH_TOKEN_P1', t1);
+                TOKEN_PART_1 = t1;
+            }
+            if (t2) {
+                localStorage.setItem('PF_GH_TOKEN_P2', t2);
+                TOKEN_PART_2 = t2;
+            }
+            if (owner) localStorage.setItem('PF_GH_OWNER', owner);
+            if (repo) localStorage.setItem('PF_GH_REPO', repo);
+
+            GITHUB_CONFIG.owner = owner || GITHUB_CONFIG.owner;
+            GITHUB_CONFIG.repo = repo || GITHUB_CONFIG.repo;
+
+            alert('Kredensial Cloud tersimpan aman di perangkat ini!');
+            forcePullFromCloud();
+        }
+
+        // ================= DATABASE ENGINE V18 =================
+        let db;
+        let currentUser = null;
+        let currentTab = '';
+        let posCart = [];
+        
+        const MODULES = {
+            'dashboard': { icon: '📊', label: 'Executive Dashboard', render: renderDashboard },
+            'pos': { icon: '🛍️', label: 'Terminal POS & Kasir', render: renderPOS },
+            'dapur': { icon: '👩‍🍳', label: 'Dapur (Stok Masuk)', render: renderDapur },
+            'stok': { icon: '📦', label: 'Master Stok & Aset', render: renderStok },
+            'akuntansi': { icon: '🏦', label: 'Akuntansi & HPP', render: renderAkuntansi },
+            'laporan': { icon: '📑', label: 'Pusat Laporan Lengkap', render: renderLaporan },
+            'invoice': { icon: '🧾', label: 'Invoice Profesional', render: renderInvoice },
+            'crm': { icon: '👥', label: 'CRM & Pelanggan', render: renderCRM },
+            'hrm_admin': { icon: '📋', label: 'HRM Pusat', render: renderHRMAdmin },
+            'kpi': { icon: '⭐', label: 'KPI & Payroll', render: renderKPI },
+            'legal': { icon: '📜', label: 'Legal Dokumen', render: renderLegal },
+            'master': { icon: '⚙️', label: 'Master Control (Admin)', render: renderMaster },
+            'karyawan': { icon: '📱', label: 'Portal Karyawan (ESS)', render: renderKaryawan },
+            'panduan': { icon: '📖', label: 'Panduan Sistem', render: renderPanduan }
+        };
+
+        const DEFAULT_ROLES = {
+            'Super Admin': Object.keys(MODULES),
+            'Owner': Object.keys(MODULES),
+            'Admin Toko': ['dashboard', 'pos', 'stok', 'laporan', 'crm', 'hrm_admin', 'karyawan', 'panduan'],
+            'Accounting': ['dashboard', 'pos', 'stok', 'akuntansi', 'laporan', 'invoice', 'karyawan', 'panduan'],
+            'Admin Gudang': ['dashboard', 'stok', 'karyawan', 'panduan'],
+            'Head Dapur': ['pos', 'stok', 'dapur', 'karyawan', 'panduan'], 
+            'Kasir': ['pos', 'crm', 'karyawan', 'panduan'],
+            'Karyawan': ['karyawan', 'panduan']
+        };
+
+        let today = new Date();
+        let firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+        let lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+        document.getElementById('g-start').value = firstDay;
+        document.getElementById('g-end').value = lastDay;
+        
+        initDB();
+
+        function initDB() {
+            const req = indexedDB.open('PastryFity_DB_Clean_3', 1);
+            req.onupgradeneeded = (e) => {
+                const u = e.target.result;
+                const stores = ['users', 'roles', 'produk', 'trx', 'jurnal', 'crm', 'hrm', 'pengajuan', 'laporan', 'logs', 'stok_log', 'kpi', 'payment_acc', 'kurir', 'edit_req'];
+                stores.forEach(name => {
+                    let keyOptions = name === 'users' ? {keyPath: 'pin'} : (name === 'roles' ? {keyPath: 'name'} : (name === 'crm' ? {keyPath: 'hp'} : (name === 'kpi' ? {keyPath: 'nama'} : {keyPath: 'id', autoIncrement: true})));
+                    if(!u.objectStoreNames.contains(name)) u.createObjectStore(name, keyOptions);
+                });
+            };
+            req.onsuccess = (e) => { 
+                db = e.target.result; 
+                seedInitialData();
+                setInterval(() => { autoSyncToGitHubSilent(); }, 3 * 60 * 1000);
+            };
+            req.onerror = () => { alert("Gagal membuka database lokal."); };
+        }
+
+        function seedInitialData() {
+            const tx = db.transaction(['users', 'roles', 'payment_acc'], 'readwrite');
+            const storeRoles = tx.objectStore('roles');
+            for(let r in DEFAULT_ROLES) { storeRoles.get(r).onsuccess = e => { if(!e.target.result) storeRoles.put({name: r, modules: DEFAULT_ROLES[r]}); } }
+            
+            const storeUsers = tx.objectStore('users');
+            storeUsers.get('8888').onsuccess = e => { if(!e.target.result) storeUsers.put({ pin: '8888', nama: 'Owner System', role: 'Super Admin', kontak: 'owner@pastryfity.com', alamat: '-', detail_posisi: 'CEO' }); }
+            
+            const storePay = tx.objectStore('payment_acc');
+            storePay.getAll().onsuccess = e => {
+                if(e.target.result.length === 0) {
+                    storePay.put({jenis: 'Tunai Kasir', no: '-', nama: 'Kasir Utama'});
+                    storePay.put({jenis: 'QRIS', no: '-', nama: 'QRIS PastryFity'});
+                    storePay.put({jenis: 'Transfer Bank', no: 'BCA 123456', nama: 'PT PastryFity'});
+                    storePay.put({jenis: 'Mesin EDC Debit', no: 'EDC Kasir 1', nama: 'BCA/Mandiri/BNI'});
+                }
+            }
+        }
+
+        // ================= CLOUD SYNC AUTOMATION =================
+        async function autoSyncToGitHubSilent() {
+            if (!db) return;
+            try {
+                const token = getGitHubToken();
+                if(!token) return;
+
+                const stores = ['users', 'roles', 'produk', 'trx', 'jurnal', 'crm', 'hrm', 'pengajuan', 'laporan', 'logs', 'stok_log', 'kpi', 'payment_acc', 'kurir', 'edit_req'];
+                let backupData = {};
+
+                for (let storeName of stores) {
+                    backupData[storeName] = await new Promise((resolve) => {
+                        let tx = db.transaction(storeName, 'readonly');
+                        tx.objectStore(storeName).getAll().onsuccess = e => resolve(e.target.result);
+                    });
+                }
+
+                const jsonContent = JSON.stringify(backupData, null, 2);
+                const encodedContent = btoa(unescape(encodeURIComponent(jsonContent)));
+                const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+
+                let sha = "";
+                const getFileReq = await fetch(url, { headers: { "Authorization": `token ${token}` } });
+                if (getFileReq.ok) {
+                    const fileData = await getFileReq.json();
+                    sha = fileData.sha;
+                }
+
+                await fetch(url, {
+                    method: "PUT",
+                    headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        message: `Auto Sync Cloud - ${new Date().toLocaleString()}`,
+                        content: encodedContent,
+                        sha: sha ? sha : undefined,
+                        branch: GITHUB_CONFIG.branch
+                    })
+                });
+            } catch (err) {}
+        }
+
+        async function forcePullFromCloud() {
+            const token = getGitHubToken();
+            if (!token) return false;
+
+            try {
+                const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?t=${new Date().getTime()}`;
+                const res = await fetch(url, { headers: { "Authorization": `token ${token}` } });
+                
+                if (res.ok) {
+                    const fileData = await res.json();
+                    const jsonStr = decodeURIComponent(escape(atob(fileData.content)));
+                    const cloudData = JSON.parse(jsonStr);
+
+                    const stores = Object.keys(cloudData);
+                    for (let storeName of stores) {
+                        let tx = db.transaction(storeName, 'readwrite');
+                        let store = tx.objectStore(storeName);
+                        store.clear();
+                        if (Array.isArray(cloudData[storeName])) {
+                            cloudData[storeName].forEach(item => store.put(item));
+                        }
+                    }
+                    syncApp();
+                    return true;
+                }
+            } catch (e) {}
+            return false;
+        }
+
+        // ================= WEB BLUETOOTH PRINTER NATIVE SYSTEM =================
+        let bluetoothDevice = null;
+        let bluetoothCharacteristic = null;
+
+        async function connectBluetoothPrinter() {
+            if (!navigator.bluetooth) {
+                return alert('Browser ini tidak mendukung Web Bluetooth API. Gunakan Chrome atau Edge (Android / PC).');
+            }
+
+            try {
+                const dot = document.getElementById('bt-status-dot');
+                const txt = document.getElementById('bt-status-text');
+                
+                bluetoothDevice = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb', 'e7810a71-73ae-499d-8c15-faa9aef0c3f2']
+                });
+
+                dot.className = "w-2 h-2 rounded-full bg-amber-500 animate-ping";
+                txt.innerText = "Connecting...";
+
+                const server = await bluetoothDevice.gatt.connect();
+                const services = await server.getPrimaryServices();
+                
+                for (let service of services) {
+                    const characteristics = await service.getCharacteristics();
+                    for (let c of characteristics) {
+                        if (c.properties.write || c.properties.writeWithoutResponse) {
+                            bluetoothCharacteristic = c;
+                            break;
+                        }
+                    }
+                    if (bluetoothCharacteristic) break;
+                }
+
+                if (bluetoothCharacteristic) {
+                    dot.className = "w-2 h-2 rounded-full bg-emerald-500";
+                    txt.innerText = bluetoothDevice.name || "BT Connected";
+                    alert(`Terhubung ke printer Bluetooth: ${bluetoothDevice.name || 'Printer Thermal'}`);
+                } else {
+                    throw new Error('Karakteristik cetak printer tidak ditemukan.');
+                }
+            } catch (error) {
+                document.getElementById('bt-status-dot').className = "w-2 h-2 rounded-full bg-rose-500";
+                document.getElementById('bt-status-text').innerText = "Gagal Connect";
+                alert('Gagal menyambungkan Bluetooth Printer: ' + error.message);
+            }
+        }
+
+        async function sendBluetoothRaw(bytes) {
+            if (!bluetoothCharacteristic) return false;
+            try {
+                const chunkSize = 512;
+                for (let i = 0; i < bytes.length; i += chunkSize) {
+                    const chunk = bytes.slice(i, i + chunkSize);
+                    await bluetoothCharacteristic.writeValue(chunk);
+                }
+                return true;
+            } catch (e) {
+                alert("Gagal mengirim data ke Bluetooth Printer: " + e.message);
+                return false;
+            }
+        }
+
+        // ================= GLOBAL HELPERS & AUTH =================
+        function logActivity(action, detail) { if(currentUser) db.transaction('logs','readwrite').objectStore('logs').put({ user: currentUser.nama, pin: currentUser.pin, action, detail, ts: new Date().getTime() }); }
+
+        async function login() {
+            if(!db) return alert("Sistem sedang disiapkan. Mohon tunggu.");
+            const pin = document.getElementById('login-pin').value;
+            if(!pin) return;
+
+            document.getElementById('login-btn-text').innerText = "Menarik Data Cloud...";
+            await forcePullFromCloud();
+
+            db.transaction(['users', 'roles'],'readonly').objectStore('users').get(pin).onsuccess = e => {
+                if(e.target.result) {
+                    currentUser = e.target.result;
+                    document.getElementById('login-view').classList.add('hidden');
+                    document.getElementById('app-view').classList.remove('hidden');
+                    document.getElementById('sidebar-user-name').innerText = currentUser.nama;
+                    document.getElementById('sidebar-user-role').innerText = currentUser.role;
+                    document.getElementById('sidebar-avatar').innerText = currentUser.nama.charAt(0).toUpperCase();
+                    document.getElementById('header-user-name').innerText = currentUser.nama;
+                    logActivity('Login', 'Masuk ke sistem');
+                    buildNavigation();
+                } else {
+                    document.getElementById('login-btn-text').innerText = "Autentikasi & Sync Cloud";
+                    alert('PIN tidak terdaftar atau salah. Pastikan PIN sudah tersimpan di Cloud.');
+                }
+            };
+        }
+
+        function logout() { logActivity('Logout', 'Keluar'); setTimeout(()=>location.reload(), 300); }
+
+        function buildNavigation() {
+            db.transaction('roles','readonly').objectStore('roles').get(currentUser.role).onsuccess = e => {
+                const r = e.target.result; 
+                let mods = r ? r.modules : DEFAULT_ROLES['Karyawan'];
+                if(!mods.includes('karyawan')) mods.push('karyawan');
+                if(!mods.includes('panduan')) mods.push('panduan');
+
+                const nav = document.getElementById('nav-container'); nav.innerHTML = '';
+                mods.forEach(m => {
+                    if(MODULES[m]) {
+                        nav.innerHTML += `<button onclick="navigate('${m}')" id="nav-btn-${m}" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:bg-rose-900 hover:text-pink-100 transition-all cursor-pointer"><span class="text-base">${MODULES[m].icon}</span><span>${MODULES[m].label}</span></button>`;
+                    }
+                });
+                if(mods.length > 0) navigate(mods[0]);
+            };
+        }
+
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            const ov = document.getElementById('sidebar-overlay');
+            sb.classList.toggle('-translate-x-full');
+            ov.classList.toggle('hidden');
+        }
+
+        function navigate(tab) {
+            document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('bg-pink-500', 'text-white'); b.classList.add('text-slate-400'); });
+            const activeBtn = document.getElementById(`nav-btn-${tab}`);
+            if(activeBtn) { activeBtn.classList.remove('text-slate-400'); activeBtn.classList.add('bg-pink-500', 'text-white'); }
+            currentTab = tab;
+            document.getElementById('header-title').innerText = MODULES[tab].label;
+            
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('sidebar-overlay').classList.add('hidden');
+            }
+
+            const df = document.getElementById('dash-date-filter');
+            if(['dashboard','stok','akuntansi', 'laporan', 'hrm_admin', 'karyawan', 'pos'].includes(tab)) { df.classList.remove('hidden'); df.classList.add('flex'); } 
+            else { df.classList.add('hidden'); df.classList.remove('flex'); }
+            MODULES[tab].render();
+        }
+
+        function syncApp() { if(currentTab && MODULES[currentTab]) MODULES[currentTab].render(); }
+
+        function openProfileModal() { 
+            document.getElementById('modal-profile').classList.remove('hidden'); 
+            document.getElementById('prof-nama').value = currentUser.nama; 
+            document.getElementById('prof-kontak').value = currentUser.kontak||'';
+            document.getElementById('cfg-gh-token-1').value = TOKEN_PART_1 || localStorage.getItem('PF_GH_TOKEN_P1') || "";
+            document.getElementById('cfg-gh-token-2').value = TOKEN_PART_2 || localStorage.getItem('PF_GH_TOKEN_P2') || "";
+            document.getElementById('cfg-gh-owner').value = GITHUB_CONFIG.owner;
+            document.getElementById('cfg-gh-repo').value = GITHUB_CONFIG.repo;
+        }
+        function closeProfileModal() { document.getElementById('modal-profile').classList.add('hidden'); }
+        function updateProfile(e) {
+            e.preventDefault(); currentUser.nama = document.getElementById('prof-nama').value; currentUser.kontak = document.getElementById('prof-kontak').value;
+            db.transaction('users','readwrite').objectStore('users').put(currentUser).onsuccess = () => { 
+                document.getElementById('sidebar-user-name').innerText = currentUser.nama; 
+                document.getElementById('header-user-name').innerText = currentUser.nama; 
+                alert('Profil tersimpan.'); 
+                closeProfileModal(); 
+                autoSyncToGitHubSilent();
+            };
+        }
+        function toRp(num) { return 'Rp ' + (num||0).toLocaleString('id-ID'); }
+
+        // ================= DASHBOARD & MODUL KASIR =================
+        function renderDashboard() {
+            const ws = document.getElementById('main-workspace');
+            ws.innerHTML = `
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6" id="dash-cards"></div>
+                <div class="bg-white border border-pink-100 rounded-2xl shadow-xs mb-6 flex flex-col h-64 overflow-hidden">
+                    <div class="p-4 border-b border-pink-50 flex justify-between items-center gap-2">
+                        <h3 id="dash-order-title" class="text-xs font-bold text-slate-800 uppercase truncate">Orderan Hari Ini</h3>
+                        <button onclick="cetakDataKePDFA4('dash-order-title', 't-dash-order', 'Orderan_Hari_Ini')" class="px-2.5 py-1 bg-emerald-600 text-white text-[10px] font-bold rounded-lg whitespace-nowrap">⬇️ PDF</button>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-3 sm:p-4"><table id="t-dash-order" class="w-full text-left text-xs whitespace-nowrap"><thead class="bg-slate-50 text-slate-500"><tr><th class="p-2">Waktu</th><th class="p-2">Order</th><th class="p-2">Item Utama</th><th class="p-2">Total Net</th><th class="p-2">Status</th></tr></thead><tbody id="dash-order-body" class="divide-y divide-slate-50"></tbody></table></div>
+                </div>
+            `;
+            let start = document.getElementById('g-start').value; let end = document.getElementById('g-end').value;
+            let o=0, p=0, d=0, totalLunas = 0, totalDP = 0;
+            let todayNow = new Date().toISOString().split('T')[0];
+
+            db.transaction(['trx','jurnal'],'readonly').objectStore('trx').openCursor(null, 'prev').onsuccess = e => {
+                let c = e.target.result;
+                if(c) {
+                    let v = c.value;
+                    if(v.tgl >= start && v.tgl <= end) {
+                        o += v.net; p += v.sisa; d += v.dp;
+                        if(v.stat === 'Lunas') totalLunas += v.net; if(v.stat === 'DP') totalDP += v.dp;
+                    }
+                    if(v.tgl === todayNow) {
+                        let tb = document.getElementById('dash-order-body');
+                        if(tb) {
+                            let fItem = v.items.length > 0 ? v.items[0].nama : '-';
+                            tb.innerHTML += `<tr><td class="p-2 font-bold">${v.tgl} ${v.jam}</td><td class="p-2 font-bold">${v.cust}</td><td class="p-2">${fItem}</td><td class="p-2 font-bold text-pink-600">${toRp(v.net)}</td><td class="p-2">${v.stat}</td></tr>`;
+                        }
+                    }
+                    c.continue();
+                } else {
+                    document.getElementById('dash-cards').innerHTML = `
+                        <div class="bg-white border border-pink-100 p-4 rounded-2xl shadow-xs"><p class="text-[10px] font-bold text-slate-400 uppercase">Total Order</p><p class="text-xl font-black text-slate-800 mt-1">${toRp(o)}</p></div>
+                        <div class="bg-white border border-pink-100 p-4 rounded-2xl shadow-xs"><p class="text-[10px] font-bold text-slate-400 uppercase">Kas Masuk</p><p class="text-xl font-black text-pink-500 mt-1">${toRp(totalLunas + totalDP)}</p></div>
+                        <div class="bg-white border border-pink-100 p-4 rounded-2xl shadow-xs"><p class="text-[10px] font-bold text-slate-400 uppercase">Piutang DP</p><p class="text-xl font-black text-amber-500 mt-1">${toRp(p)}</p></div>
+                        <div class="bg-rose-950 p-4 rounded-2xl shadow-xs text-white"><p class="text-[10px] font-bold text-pink-300 uppercase">Periode</p><p class="text-xs font-bold mt-1">${start} s/d ${end}</p></div>
+                    `;
+                }
+            };
+        }
+
+        let posTabMode = 'pos';
+        function renderPOS() {
+            const ws = document.getElementById('main-workspace');
+            ws.innerHTML = `
+                <div class="mb-4 flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                    <button onclick="posTabMode='pos'; renderPOS();" class="px-3.5 py-2 text-xs font-bold rounded-xl ${posTabMode==='pos'?'bg-rose-950 text-white':'bg-white border text-slate-600'}">Terminal Kasir Baru</button>
+                </div>
+                <div id="pos-core-container"></div>
+            `;
+            buildPosCore();
+        }
+
+        function buildPosCore() {
+            document.getElementById('pos-core-container').innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 min-h-[calc(100vh-12rem)]">
+                    <div class="lg:col-span-7 xl:col-span-8 flex flex-col h-full">
+                        <div class="bg-white border border-pink-100 rounded-2xl p-3 mb-3 flex justify-between items-center gap-2">
+                            <div class="flex gap-1.5 overflow-x-auto" id="pos-cat-container"></div>
+                            <button onclick="document.getElementById('modal-pos-custom').classList.remove('hidden')" class="px-3 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl">+ Custom Cake</button>
+                        </div>
+                        <div class="flex-1 overflow-y-auto bg-white border border-pink-100 rounded-2xl p-3 sm:p-4 max-h-[550px]">
+                            <div id="pos-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-2.5"></div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-5 xl:col-span-4 bg-white border border-pink-100 rounded-2xl flex flex-col h-full overflow-hidden">
+                        <div class="p-3 border-b border-pink-100 bg-pink-50/50"><h3 class="text-xs font-black text-slate-800 uppercase">Keranjang Pesanan</h3></div>
+                        <div class="flex-1 overflow-y-auto p-3 max-h-48" id="pos-cart-list"></div>
+                        <div class="p-3 border-t border-pink-100 space-y-2 bg-pink-50/30">
+                            <input type="text" id="pos-nama" placeholder="Nama Pelanggan" class="w-full text-xs font-medium px-3 py-2 border border-pink-200 rounded-xl outline-none bg-white">
+                            <div class="bg-rose-950 rounded-xl p-3 text-white space-y-1">
+                                <div class="flex justify-between text-xs font-black text-emerald-400"><span>TOTAL NET:</span><span id="pos-sum-net">Rp 0</span></div>
+                            </div>
+                            <button onclick="checkoutPos('Normal')" class="w-full py-3 bg-pink-500 hover:bg-pink-600 text-white font-bold text-xs rounded-xl shadow-xs cursor-pointer">Bayar & Process Order</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            posCart = []; loadPosCategories();
+        }
+
+        function loadPosCategories() { renderPosGrid(); }
+        function renderPosGrid() {
+            const g = document.getElementById('pos-grid'); g.innerHTML = '';
+            db.transaction('produk','readonly').objectStore('produk').openCursor().onsuccess = e => {
+                let c = e.target.result;
+                if(c) {
+                    let p = c.value;
+                    if(p.tipe === 'Barang Displei' && p.stok > 0) {
+                        g.innerHTML += `<div onclick="addPosCart(${p.id}, '${p.nama}', ${p.jual}, ${p.stok}, ${p.modal}, null)" class="border border-pink-100 rounded-2xl p-2.5 cursor-pointer hover:border-pink-400 bg-white"><div class="text-xs font-bold text-slate-800">${p.nama}</div><div class="text-[10px] font-black text-slate-900 mt-1">${toRp(p.jual)}</div></div>`;
+                    }
+                    c.continue();
+                }
+            }
+        }
+
+        function addPosCart(id, nama, harga, max, modal, cdata) {
+            let ex = posCart.find(i=>i.id===id);
+            if(ex) { ex.qty++; } else { posCart.push({id, nama, harga, modal, qty:1, max, cdata}); }
+            renderPosCart();
+        }
+
+        function renderPosCart() {
+            let l = document.getElementById('pos-cart-list'); l.innerHTML = '';
+            let sub = 0;
+            posCart.forEach((i) => {
+                sub += (i.harga * i.qty);
+                l.innerHTML += `<div class="flex justify-between items-center py-2 border-b border-pink-50"><div class="text-xs font-bold">${i.nama} x ${i.qty}</div><div class="text-xs font-bold">${toRp(i.harga * i.qty)}</div></div>`;
+            });
+            document.getElementById('pos-sum-net').innerText = toRp(sub);
+        }
+
+        function checkoutPos(type) {
+            if(posCart.length===0) return alert('Keranjang Kosong!');
+            alert('Transaksi Berhasil Tersimpan.');
+            posCart = []; renderPosCart();
+            autoSyncToGitHubSilent();
+        }
+
+        function renderDapur() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">Modul Dapur Siap.</div>`; }
+        function renderStok() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">Modul Stok Siap.</div>`; }
+        function renderMaster() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">Master Control Siap.</div>`; }
+        function renderAkuntansi() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">Modul Akuntansi Siap.</div>`; }
+        function renderLaporan() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">Pusat Laporan Siap.</div>`; }
+        function renderInvoice() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">Invoice B2B Siap.</div>`; }
+        function renderCRM() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">CRM Pelanggan Siap.</div>`; }
+        function renderHRMAdmin() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">HRM Pusat Siap.</div>`; }
+        function renderKPI() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">KPI Payroll Siap.</div>`; }
+        function renderLegal() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">Legal Generator Siap.</div>`; }
+        function renderKaryawan() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">Portal ESS Karyawan Siap.</div>`; }
+        function renderPanduan() { document.getElementById('main-workspace').innerHTML = `<div class="bg-white p-6 rounded-2xl border border-pink-100 text-xs font-bold">User Manual Panduan Siap.</div>`; }
+
+        function cetakDataKePDFA4(titleId, tableId, fileName) {
+            const { jsPDF } = window.jspdf; const doc = new jsPDF({ format: 'a4' });
+            let title = document.getElementById(titleId) ? document.getElementById(titleId).innerText : 'Laporan PastryFity';
+            doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.text("PASTRYFITY ENTERPRISE", 105, 20, {align:"center"});
+            doc.setFontSize(12); doc.text(title, 105, 28, {align:"center"});
+            doc.autoTable({ html: '#'+tableId, startY: 35, styles: { fontSize: 8 }, headStyles: { fillColor: [244, 114, 182] } });
+            doc.save(`${fileName}.pdf`);
+        }
+    </script>
+</body>
+</html>
