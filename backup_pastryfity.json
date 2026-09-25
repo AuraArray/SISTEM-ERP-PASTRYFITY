@@ -170,6 +170,46 @@
       "kasir": "Owner System",
       "ts": 1790300831125,
       "id": 2
+    },
+    {
+      "tgl": "2026-09-25",
+      "jam": "08:57",
+      "tglAmbil": "2026-09-25",
+      "jamAmbil": "08:57",
+      "cust": "KUE",
+      "hp": "08123421",
+      "items": [
+        {
+          "id": "custom_1790301444025",
+          "nama": "[Custom] SDD",
+          "harga": 10000,
+          "modal": 0,
+          "qty": 1,
+          "max": 999,
+          "cdata": {
+            "n": "SDD",
+            "jns": "DS",
+            "ukr": "SDFS",
+            "mdl": "G",
+            "cap": "D",
+            "det": "DFGDF"
+          }
+        }
+      ],
+      "sub": 10000,
+      "ppn": 0,
+      "net": 10000,
+      "dp": 1226,
+      "sisa": 8774,
+      "stat": "DP",
+      "method": "Kasir Utama - Tunai Kasir",
+      "kirim": "Ambil Sendiri",
+      "kirimDet": "-",
+      "pack": "Plastik (Gratis)",
+      "type": "Normal",
+      "kasir": "Desvita",
+      "ts": 1790301464793,
+      "id": 3
     }
   ],
   "jurnal": [
@@ -186,9 +226,22 @@
       "nom": 20000,
       "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - Guest",
       "id": 2
+    },
+    {
+      "tgl": "2026-09-25",
+      "jenis": "Pendapatan Operasional (+)",
+      "nom": 1226,
+      "ket": "POS DP [Kasir Utama - Tunai Kasir] - KUE",
+      "id": 3
     }
   ],
   "crm": [
+    {
+      "hp": "08123421",
+      "nama": "KUE",
+      "total": 10000,
+      "poin": 10
+    },
     {
       "hp": "A",
       "nama": "D",
@@ -317,6 +370,22 @@
       "detail": "Generate PIN untuk Desvita",
       "ts": 1790301270818,
       "id": 26
+    },
+    {
+      "user": "Desvita",
+      "pin": "230519",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790301297847,
+      "id": 28
+    },
+    {
+      "user": "Desvita",
+      "pin": "230519",
+      "action": "Transaksi POS",
+      "detail": "Order KUE - Rp 10.000",
+      "ts": 1790301464816,
+      "id": 29
     }
   ],
   "stok_log": [],
