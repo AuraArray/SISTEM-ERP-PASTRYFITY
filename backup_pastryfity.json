@@ -1,6 +1,20 @@
 {
   "users": [
     {
+      "nama": "NANA",
+      "role": "KASIR",
+      "kontak": "081361840793",
+      "detail_posisi": "Medan Johor",
+      "pin": "488681"
+    },
+    {
+      "nama": "DESVITA",
+      "role": "KASIR",
+      "kontak": "082110293027",
+      "detail_posisi": "Medan Johor",
+      "pin": "490313"
+    },
+    {
       "pin": "8888",
       "nama": "Owner System",
       "role": "Super Admin",
@@ -52,6 +66,18 @@
         "stok",
         "dapur",
         "karyawan",
+        "panduan"
+      ]
+    },
+    {
+      "name": "KASIR",
+      "modules": [
+        "dashboard",
+        "pos",
+        "dapur",
+        "stok",
+        "laporan",
+        "crm",
         "panduan"
       ]
     },
@@ -108,51 +134,19 @@
         "karyawan",
         "panduan"
       ]
+    },
+    {
+      "name": "TIM DAPUR",
+      "modules": [
+        "pos",
+        "dapur",
+        "stok",
+        "panduan"
+      ]
     }
   ],
   "produk": [],
-  "trx": [
-    {
-      "tgl": "2026-09-25",
-      "jam": "08:44",
-      "tglAmbil": "2026-09-25",
-      "jamAmbil": "08:44",
-      "cust": "Guest",
-      "hp": "-",
-      "items": [
-        {
-          "id": "custom_1790300777729",
-          "nama": "[Custom] Irma",
-          "harga": 20000,
-          "modal": 0,
-          "qty": 1,
-          "max": 999,
-          "cdata": {
-            "n": "Irma",
-            "jns": "Fgg",
-            "ukr": "Dvhh",
-            "mdl": "Fchgc",
-            "cap": "Hgsvjfc",
-            "det": ""
-          }
-        }
-      ],
-      "sub": 20000,
-      "ppn": 0,
-      "net": 20000,
-      "dp": 20000,
-      "sisa": 0,
-      "stat": "Lunas",
-      "method": "Kasir Utama - Tunai Kasir",
-      "kirim": "Ambil Sendiri",
-      "kirimDet": "-",
-      "pack": "Plastik (Gratis)",
-      "type": "Normal",
-      "kasir": "Owner System",
-      "ts": 1790300831125,
-      "id": 2
-    }
-  ],
+  "trx": [],
   "jurnal": [
     {
       "tgl": "2026-09-25",
@@ -160,13 +154,6 @@
       "nom": 10000,
       "ket": "POS DP [Kasir Utama - Tunai Kasir] - D",
       "id": 1
-    },
-    {
-      "tgl": "2026-09-25",
-      "jenis": "Pendapatan Operasional (+)",
-      "nom": 20000,
-      "ket": "POS Lunas [Kasir Utama - Tunai Kasir] - Guest",
-      "id": 2
     }
   ],
   "crm": [
@@ -262,18 +249,34 @@
     {
       "user": "Owner System",
       "pin": "8888",
-      "action": "Login",
-      "detail": "Masuk ke sistem",
-      "ts": 1790300583731,
+      "action": "Role Management",
+      "detail": "Menambah role KASIR",
+      "ts": 1790300708729,
+      "id": 12
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk DESVITA",
+      "ts": 1790300730564,
       "id": 13
     },
     {
       "user": "Owner System",
       "pin": "8888",
-      "action": "Transaksi POS",
-      "detail": "Order Guest - Rp 20.000",
-      "ts": 1790300831150,
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk NANA",
+      "ts": 1790300808290,
       "id": 14
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Role Management",
+      "detail": "Menambah role TIM DAPUR",
+      "ts": 1790300917068,
+      "id": 15
     }
   ],
   "stok_log": [],
