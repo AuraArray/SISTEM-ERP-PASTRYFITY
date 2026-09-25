@@ -1,6 +1,13 @@
 {
   "users": [
     {
+      "nama": "NANA",
+      "role": "KASIR",
+      "kontak": "081361840793",
+      "detail_posisi": "Medan Johor",
+      "pin": "488681"
+    },
+    {
       "nama": "DESVITA",
       "role": "KASIR",
       "kontak": "082110293027",
@@ -245,6 +252,14 @@
       "detail": "Generate PIN untuk DESVITA",
       "ts": 1790300730564,
       "id": 13
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk NANA",
+      "ts": 1790300808290,
+      "id": 14
     }
   ],
   "stok_log": [],
