@@ -56,6 +56,18 @@
       ]
     },
     {
+      "name": "KASIR",
+      "modules": [
+        "dashboard",
+        "pos",
+        "dapur",
+        "stok",
+        "laporan",
+        "crm",
+        "panduan"
+      ]
+    },
+    {
       "name": "Karyawan",
       "modules": [
         "karyawan",
@@ -210,6 +222,14 @@
       "detail": "Masuk ke sistem",
       "ts": 1790300458991,
       "id": 11
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Role Management",
+      "detail": "Menambah role KASIR",
+      "ts": 1790300708729,
+      "id": 12
     }
   ],
   "stok_log": [],
