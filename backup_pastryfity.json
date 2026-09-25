@@ -284,14 +284,7 @@
   ],
   "stok_log": [],
   "kpi": [],
-  "payment_acc": [
-    {
-      "jenis": "Mesin EDC Debit",
-      "no": "EDC Kasir 1",
-      "nama": "BCA/Mandiri/BNI",
-      "id": 4
-    }
-  ],
+  "payment_acc": [],
   "kurir": [
     {
       "nama": "Ihran",
