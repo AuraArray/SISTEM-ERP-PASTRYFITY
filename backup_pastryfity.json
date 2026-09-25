@@ -1,6 +1,13 @@
 {
   "users": [
     {
+      "nama": "DESVITA",
+      "role": "KASIR",
+      "kontak": "082110293027",
+      "detail_posisi": "Medan Johor",
+      "pin": "490313"
+    },
+    {
       "pin": "8888",
       "nama": "Owner System",
       "role": "Super Admin",
@@ -230,6 +237,14 @@
       "detail": "Menambah role KASIR",
       "ts": 1790300708729,
       "id": 12
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk DESVITA",
+      "ts": 1790300730564,
+      "id": 13
     }
   ],
   "stok_log": [],
