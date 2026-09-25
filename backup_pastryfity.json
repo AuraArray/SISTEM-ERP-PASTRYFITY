@@ -22,6 +22,13 @@
       "pin": "561134"
     },
     {
+      "nama": "AYU",
+      "role": "TIM DAPUR",
+      "kontak": "081262839002",
+      "detail_posisi": "MEDAN TEMBUNG",
+      "pin": "777394"
+    },
+    {
       "pin": "8888",
       "nama": "Owner System",
       "role": "Super Admin",
@@ -292,6 +299,14 @@
       "detail": "Generate PIN untuk ICHA",
       "ts": 1790300981356,
       "id": 16
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk AYU",
+      "ts": 1790301025930,
+      "id": 17
     }
   ],
   "stok_log": [],
