@@ -310,6 +310,12 @@
       "id": 4
     }
   ],
-  "kurir": [],
+  "kurir": [
+    {
+      "nama": "Ihran",
+      "plat": "0000",
+      "id": 1
+    }
+  ],
   "edit_req": []
 }
