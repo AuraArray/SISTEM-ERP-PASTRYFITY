@@ -1,11 +1,39 @@
 {
   "users": [
     {
+      "nama": "DESVITA",
+      "role": "KASIR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "225134"
+    },
+    {
+      "nama": "ICHA",
+      "role": "TIM DAPUR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "235610"
+    },
+    {
       "nama": "Nana",
       "role": "Accounting",
       "kontak": "-",
       "detail_posisi": "-",
       "pin": "442335"
+    },
+    {
+      "nama": "AYU",
+      "role": "TIM DAPUR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "646300"
+    },
+    {
+      "nama": "NANA",
+      "role": "KASIR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "886574"
     },
     {
       "pin": "8888",
@@ -63,6 +91,16 @@
       ]
     },
     {
+      "name": "KASIR",
+      "modules": [
+        "dashboard",
+        "pos",
+        "dapur",
+        "stok",
+        "laporan"
+      ]
+    },
+    {
       "name": "Karyawan",
       "modules": [
         "karyawan",
@@ -114,6 +152,14 @@
         "master",
         "karyawan",
         "panduan"
+      ]
+    },
+    {
+      "name": "TIM DAPUR",
+      "modules": [
+        "pos",
+        "dapur",
+        "stok"
       ]
     }
   ],
@@ -327,8 +373,64 @@
       "pin": "8888",
       "action": "Login",
       "detail": "Masuk ke sistem",
-      "ts": 1790319224113,
+      "ts": 1790320216802,
+      "id": 37
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Role Management",
+      "detail": "Menambah role KASIR",
+      "ts": 1790320467165,
+      "id": 38
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk DESVITA",
+      "ts": 1790320486422,
       "id": 39
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk NANA",
+      "ts": 1790320540565,
+      "id": 40
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Role Management",
+      "detail": "Menambah role TIM DAPUR",
+      "ts": 1790320588378,
+      "id": 41
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk ICHA",
+      "ts": 1790320600256,
+      "id": 42
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk AYU",
+      "ts": 1790320629169,
+      "id": 43
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790320850848,
+      "id": 44
     }
   ],
   "stok_log": [],
