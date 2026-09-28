@@ -563,6 +563,12 @@
       "no": "8235044311 ",
       "nama": "BCA",
       "id": 10
+    },
+    {
+      "jenis": "E-Wallet",
+      "no": "QRIS",
+      "nama": "BRI",
+      "id": 11
     }
   ],
   "kurir": [
