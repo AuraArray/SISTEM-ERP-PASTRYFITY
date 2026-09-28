@@ -577,6 +577,12 @@
       "id": 4
     }
   ],
-  "kurir": [],
+  "kurir": [
+    {
+      "nama": "Ihran",
+      "plat": "0000",
+      "id": 3
+    }
+  ],
   "edit_req": []
 }
