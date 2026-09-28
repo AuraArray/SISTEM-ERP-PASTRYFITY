@@ -77,6 +77,13 @@
       "kontak": "owner@pastryfity.com",
       "alamat": "-",
       "detail_posisi": "CEO"
+    },
+    {
+      "nama": "SAMUEL",
+      "role": "Karyawan",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "956900"
     }
   ],
   "roles": [
@@ -502,6 +509,14 @@
       "detail": "Generate PIN untuk AYU",
       "ts": 1790569318831,
       "id": 55
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk SAMUEL",
+      "ts": 1790569324295,
+      "id": 56
     }
   ],
   "stok_log": [],
