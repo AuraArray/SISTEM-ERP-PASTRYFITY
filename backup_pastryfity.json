@@ -43,6 +43,13 @@
       "pin": "663760"
     },
     {
+      "nama": "Salwah",
+      "role": "Karyawan",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "880361"
+    },
+    {
       "nama": "NANA",
       "role": "KASIR",
       "kontak": "-",
@@ -449,6 +456,22 @@
       "detail": "Generate PIN untuk April",
       "ts": 1790569233923,
       "id": 48
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790569276564,
+      "id": 52
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk Salwah",
+      "ts": 1790569297603,
+      "id": 53
     }
   ],
   "stok_log": [],
