@@ -50,6 +50,13 @@
       "pin": "663760"
     },
     {
+      "nama": "Bunga",
+      "role": "Karyawan",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "705296"
+    },
+    {
       "nama": "NANA",
       "role": "Karyawan",
       "kontak": "-",
@@ -532,6 +539,14 @@
       "detail": "Generate PIN untuk NANA",
       "ts": 1790569332946,
       "id": 57
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk Bunga",
+      "ts": 1790569584043,
+      "id": 58
     }
   ],
   "stok_log": [],
