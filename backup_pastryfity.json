@@ -557,6 +557,12 @@
       "no": "PT FITY HARRY MURABARAK",
       "nama": "BRI",
       "id": 9
+    },
+    {
+      "jenis": "Transfer Bank",
+      "no": "8235044311 ",
+      "nama": "BCA",
+      "id": 10
     }
   ],
   "kurir": [
