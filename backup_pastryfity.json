@@ -50,6 +50,13 @@
       "pin": "663760"
     },
     {
+      "nama": "AYU",
+      "role": "Karyawan",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "774446"
+    },
+    {
       "nama": "Salwah",
       "role": "Karyawan",
       "kontak": "-",
@@ -487,6 +494,14 @@
       "detail": "Generate PIN untuk ICHA",
       "ts": 1790569313046,
       "id": 54
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk AYU",
+      "ts": 1790569318831,
+      "id": 55
     }
   ],
   "stok_log": [],
