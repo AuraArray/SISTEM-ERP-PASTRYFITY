@@ -36,6 +36,13 @@
       "pin": "646300"
     },
     {
+      "nama": "April",
+      "role": "Karyawan",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "663760"
+    },
+    {
       "nama": "NANA",
       "role": "KASIR",
       "kontak": "-",
@@ -426,6 +433,22 @@
       "detail": "Order Apri - Rp 100",
       "ts": 1790560831450,
       "id": 46
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790569198520,
+      "id": 47
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk April",
+      "ts": 1790569233923,
+      "id": 48
     }
   ],
   "stok_log": [],
