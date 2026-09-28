@@ -22,6 +22,13 @@
       "pin": "442335"
     },
     {
+      "nama": "DESVITA",
+      "role": "KASIR",
+      "kontak": "-",
+      "detail_posisi": "-",
+      "pin": "606780"
+    },
+    {
       "nama": "AYU",
       "role": "TIM DAPUR",
       "kontak": "-",
@@ -423,6 +430,22 @@
       "detail": "Generate PIN untuk AYU",
       "ts": 1790320629169,
       "id": 43
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "Login",
+      "detail": "Masuk ke sistem",
+      "ts": 1790559880120,
+      "id": 44
+    },
+    {
+      "user": "Owner System",
+      "pin": "8888",
+      "action": "PIN Center",
+      "detail": "Generate PIN untuk DESVITA",
+      "ts": 1790560120811,
+      "id": 45
     }
   ],
   "stok_log": [],
