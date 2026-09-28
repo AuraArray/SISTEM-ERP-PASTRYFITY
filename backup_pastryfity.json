@@ -171,48 +171,7 @@
     }
   ],
   "produk": [],
-  "trx": [
-    {
-      "tgl": "2026-09-28",
-      "jam": "09:00",
-      "tglAmbil": "2026-09-28",
-      "jamAmbil": "09:00",
-      "cust": "Apri",
-      "hp": "Aku",
-      "items": [
-        {
-          "id": "custom_1790560823552",
-          "nama": "[Custom] A",
-          "harga": 100,
-          "modal": 0,
-          "qty": 1,
-          "max": 999,
-          "cdata": {
-            "n": "A",
-            "jns": "DFD",
-            "ukr": "erge",
-            "mdl": "erger",
-            "cap": "DFDF",
-            "det": "qdsd"
-          }
-        }
-      ],
-      "sub": 100,
-      "ppn": 0,
-      "net": 100,
-      "dp": 100,
-      "sisa": 0,
-      "stat": "Lunas",
-      "method": "Kasir Utama - Tunai Kasir",
-      "kirim": "Ambil Sendiri",
-      "kirimDet": "-",
-      "pack": "Plastik (Gratis)",
-      "type": "Normal",
-      "kasir": "Owner System",
-      "ts": 1790560831447,
-      "id": 4
-    }
-  ],
+  "trx": [],
   "jurnal": [
     {
       "tgl": "2026-09-25",
